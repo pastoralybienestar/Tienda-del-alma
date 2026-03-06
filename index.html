@@ -90,7 +90,7 @@
 <body class="bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200 overflow-x-hidden">
 
     <!-- RECIBO PARA IMPRIMIR (Oculto por defecto) -->
-    <div id="receipt-view" class="hidden bg-white text-black p-8 max-w-3xl mx-auto min-h-screen">
+    <div id="receipt-view" class="hidden bg-white text-black p-8 mx-auto w-full max-w-[800px]">
         <div class="text-center border-b-4 border-black pb-6 mb-6">
             <h1 class="text-4xl font-black uppercase tracking-widest">Cibercolegio UCN</h1>
             <h2 class="text-2xl mt-2 font-serif italic text-gray-600">Recibo: Outfit del Alma</h2>
@@ -665,7 +665,7 @@
             // Build Receipt Content
             const receiptItems = document.getElementById('receipt-items');
             receiptItems.innerHTML = cart.map(item => `
-                <div class="pdf-item border-l-4 border-gray-400 pl-4 py-3 mb-4 bg-white">
+                <div class="pdf-item break-inside-avoid border-l-4 border-gray-400 pl-4 py-3 mb-4 bg-white">
                     <h3 class="text-xl font-bold uppercase">${item.name}</h3>
                     <p class="text-gray-700 my-1">${item.desc}</p>
                     <p class="font-serif italic text-gray-900 font-semibold bg-gray-100 p-2 inline-block rounded">${item.verse}</p>
@@ -676,57 +676,61 @@
             const mainApp = document.getElementById('main-app');
             const receiptView = document.getElementById('receipt-view');
             
-            // Forzar vista de recibo a un ancho fijo para evitar recortes horizontales en móviles
-            receiptView.style.width = '800px';
-            receiptView.style.maxWidth = 'none';
-            document.body.classList.remove('overflow-x-hidden'); // Evita que la pantalla esconda el contenido
-
-            // Mostramos el recibo para que html2pdf lo pueda capturar
-            mainApp.classList.add('hidden');
+            // Ocultar toda la app principal para que no interfiera con el tamaño del canvas
+            mainApp.style.display = 'none';
+            
+            // Forzar vista de recibo a un ancho fijo y mostrarla
             receiptView.classList.remove('hidden');
+            receiptView.style.display = 'block';
+            receiptView.style.width = '800px';
+            receiptView.style.margin = '0 auto';
 
             // Scroll al inicio absoluto para que capture todo desde arriba
             window.scrollTo(0, 0);
 
-            // Configuración avanzada del PDF
-            const opt = {
-                margin:       15,
-                filename:     'Mi_Outfit_del_Alma_UCN.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true, 
-                    scrollY: 0,
-                    windowWidth: 800 // Fuerza el ancho del canvas internamente
-                },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Genera múltiples hojas sin cortar el texto a la mitad
-            };
+            // Damos 100ms para que el navegador "pinte" el HTML completo antes de tomar la foto
+            setTimeout(() => {
+                // Configuración avanzada del PDF
+                const opt = {
+                    margin:       [15, 10, 15, 10],
+                    filename:     'Mi_Outfit_del_Alma_UCN.pdf',
+                    image:        { type: 'jpeg', quality: 1 },
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true, 
+                        scrollY: 0,
+                        windowWidth: 800 // Fuerza el ancho del canvas internamente
+                    },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                };
 
-            // Generar y descargar el PDF automáticamente
-            html2pdf().set(opt).from(receiptView).save().then(() => {
-                // Restaurar la vista original y limpiar todo después de la descarga
-                receiptView.style.width = '';
-                receiptView.style.maxWidth = '';
-                document.body.classList.add('overflow-x-hidden');
-                
-                btn.innerHTML = originalText;
-                mainApp.classList.remove('hidden');
-                receiptView.classList.add('hidden');
-                cerrarModalCheckout();
-                cart = [];
-                updateCartUI();
-                renderProducts();
-            }).catch(err => {
-                console.error("Error al generar PDF:", err);
-                // Si hay un error, restaurar pantalla de todos modos
-                receiptView.style.width = '';
-                receiptView.style.maxWidth = '';
-                document.body.classList.add('overflow-x-hidden');
-                btn.innerHTML = originalText;
-                mainApp.classList.remove('hidden');
-                receiptView.classList.add('hidden');
-            });
+                // Generar y descargar el PDF automáticamente
+                html2pdf().set(opt).from(receiptView).save().then(() => {
+                    // Restaurar la vista original y limpiar todo después de la descarga
+                    receiptView.style.display = '';
+                    receiptView.style.width = '';
+                    receiptView.style.margin = '';
+                    
+                    btn.innerHTML = originalText;
+                    receiptView.classList.add('hidden');
+                    mainApp.style.display = '';
+                    
+                    cerrarModalCheckout();
+                    cart = [];
+                    updateCartUI();
+                    renderProducts();
+                }).catch(err => {
+                    console.error("Error al generar PDF:", err);
+                    // Si hay un error, restaurar pantalla de todos modos
+                    receiptView.style.display = '';
+                    receiptView.style.width = '';
+                    receiptView.style.margin = '';
+                    btn.innerHTML = originalText;
+                    receiptView.classList.add('hidden');
+                    mainApp.style.display = '';
+                });
+            }, 100);
         }
     </script>
 </body>
