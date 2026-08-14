@@ -14,16 +14,17 @@
     <!-- HTML2PDF para forzar la descarga del archivo PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- Custom Tailwind Configuration and Styles -->
+    <!-- Configuración personalizada de Tailwind -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     animation: {
                         'blob': 'blob 10s infinite alternate',
-                        'spin': 'spin 1s linear infinite',
-                        'bounce': 'bounce 1s infinite',
-                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-glow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
                         blob: {
@@ -31,24 +32,53 @@
                             '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
                         }
                     }
                 }
             }
         }
     </script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;900&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Ocultar scrollbar original en contenedores específicos */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* 🎨 BARRA DE SCROLL CREATIVA GLOBAL */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-left: 1px solid #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+            border-radius: 100vh;
+            border: 3px solid #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #db2777 0%, #7c3aed 50%, #0891b2 100%);
+        }
+
+        /* Clases utilitarias de animación y estado */
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
         
-        /* Utility classes for sliding/fading elements in Vanilla JS */
         .cart-open .cart-sidebar { transform: translateX(0); }
         .cart-open .cart-backdrop { opacity: 1; pointer-events: auto; }
         
@@ -58,13 +88,12 @@
         .modal-visible { opacity: 1; pointer-events: auto; transform: scale(1); }
         .modal-hidden { opacity: 0; pointer-events: none; transform: scale(0.95); }
         
-        /* Evitar que los elementos se corten a la mitad en el PDF */
         .pdf-item {
             page-break-inside: avoid;
             break-inside: avoid;
         }
         
-        /* Efecto Espejo Elegante */
+        /* Efecto Espejo Elegante para Botones */
         .btn-mirror {
             position: relative;
             overflow: hidden;
@@ -76,7 +105,7 @@
             left: -150%;
             width: 70%;
             height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
             transform: skewX(-25deg);
             transition: all 0.6s ease;
             z-index: 10;
@@ -85,110 +114,133 @@
             left: 200%;
             transition: all 0.6s ease;
         }
+
+        /* Patrón de fondo creativo tipo ruido/cristal */
+        .glass-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200 overflow-x-hidden">
+<body class="bg-[#f4f6fb] overflow-x-hidden text-gray-800">
 
     <!-- RECIBO PARA IMPRIMIR (Oculto por defecto) -->
-    <div id="receipt-view" class="hidden bg-white text-black p-8 mx-auto w-full max-w-[800px]">
-        <div class="text-center border-b-4 border-black pb-6 mb-6">
-            <h1 class="text-4xl font-black uppercase tracking-widest">Cibercolegio UCN</h1>
-            <h2 class="text-2xl mt-2 font-serif italic text-gray-600">Recibo: Outfit del Alma</h2>
-            <p class="mt-2" id="receipt-date"></p>
+    <div id="receipt-view" class="hidden bg-white text-black p-10 mx-auto w-full max-w-[800px] border-8 border-indigo-900 rounded-xl relative">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-pink-100 rounded-bl-full -z-10 opacity-50"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-cyan-100 rounded-tr-full -z-10 opacity-50"></div>
+        
+        <div class="text-center border-b-4 border-indigo-900 pb-6 mb-6">
+            <h1 class="text-5xl font-black uppercase tracking-widest font-display text-indigo-900">Cibercolegio UCN</h1>
+            <h2 class="text-2xl mt-2 font-serif italic text-pink-600">Recibo: Outfit del Alma</h2>
+            <p class="mt-2 text-gray-500 font-medium" id="receipt-date"></p>
         </div>
-        <p class="text-xl mb-6 text-center">¡Felicidades! Has decidido revestirte de las mejores actitudes hoy.</p>
-        <div id="receipt-items" class="space-y-6">
+        <p class="text-xl mb-8 text-center font-bold text-gray-700">¡Felicidades! Has decidido revestirte de las mejores actitudes hoy.</p>
+        <div id="receipt-items" class="space-y-4">
             <!-- Items del recibo inyectados aquí -->
         </div>
-        <div class="mt-12 text-center border-t border-gray-300 pt-8">
-            <p class="font-bold text-lg">Total de prendas: <span id="receipt-count">0</span></p>
-            <p class="font-bold text-lg">Total a pagar: 0 Monedas</p>
-            <p class="text-gray-600">Pagado con: Voluntad y Fe</p>
-            <p class="mt-8 font-serif italic">📖 “Revístanse del Señor Jesucristo.” (Romanos 13,14)</p>
+        <div class="mt-12 text-center border-t-2 border-dashed border-gray-400 pt-8">
+            <p class="font-black text-2xl text-indigo-900">Total de prendas: <span id="receipt-count">0</span></p>
+            <p class="font-bold text-lg mt-2">Total a pagar: <span class="text-pink-500">0 Monedas</span></p>
+            <p class="text-gray-600 mt-1">Pagado con: Voluntad, Esfuerzo y Fe</p>
+            <p class="mt-10 font-serif italic text-xl text-gray-500">📖 “Revístanse del Señor Jesucristo.” (Romanos 13,14)</p>
         </div>
     </div>
 
     <!-- MAIN APP CONTAINER -->
-    <div id="main-app" class="relative min-h-screen print:hidden">
+    <div id="main-app" class="relative min-h-screen print:hidden selection:bg-pink-300 selection:text-pink-900">
         
         <!-- Background Orbs Effect -->
         <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-pink-300/40 rounded-full mix-blend-multiply filter blur-[80px] opacity-70 animate-blob"></div>
-            <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-300/40 rounded-full mix-blend-multiply filter blur-[80px] opacity-70 animate-blob animation-delay-2000"></div>
-            <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-cyan-300/40 rounded-full mix-blend-multiply filter blur-[80px] opacity-70 animate-blob animation-delay-4000"></div>
+            <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-pink-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob"></div>
+            <div class="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-indigo-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-cyan-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-4000"></div>
         </div>
 
         <!-- NAVBAR -->
-        <nav class="fixed top-0 w-full bg-white/70 backdrop-blur-xl border-b border-white/50 z-40 shadow-sm">
+        <nav class="fixed top-0 w-full bg-white/70 backdrop-blur-2xl border-b border-white/50 z-40 shadow-sm transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-20">
-                    <div class="flex items-center gap-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
-                        <div class="w-12 h-12 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white shadow-lg transform group-hover:rotate-12 transition-transform">
-                            <i data-lucide="heart" class="fill-white"></i>
+                <div class="flex justify-between items-center h-24">
+                    <div class="flex items-center gap-4 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                        <div class="relative w-14 h-14 bg-gradient-to-tr from-indigo-600 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_20px_rgba(236,72,153,0.3)] transform group-hover:rotate-[20deg] transition-all duration-500">
+                            <i data-lucide="sparkles" class="w-7 h-7 animate-pulse-glow"></i>
+                            <div class="absolute inset-0 bg-white/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                         <div>
-                            <h1 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-purple-600">
-                                Cibercolegio UCN
+                            <h1 class="text-3xl font-black font-display bg-clip-text text-transparent bg-gradient-to-r from-indigo-800 to-purple-600 tracking-tight">
+                                Cibercolegio <span class="font-light text-pink-500">UCN</span>
                             </h1>
-                            <p class="text-xs font-bold text-pink-500 uppercase tracking-widest">Tienda del Alma</p>
+                            <p class="text-xs font-black text-pink-500 uppercase tracking-[0.3em] mt-1 opacity-80">Tienda del Alma</p>
                         </div>
                     </div>
                     
-                    <button onclick="toggleCart(true)" class="relative p-3 bg-white rounded-2xl shadow-[0_5px_15px_rgba(0,0,0,0.08)] text-indigo-900 hover:scale-110 hover:shadow-xl transition-all">
-                        <i data-lucide="shopping-bag" class="w-6 h-6"></i>
-                        <span id="cart-badge" class="hidden absolute -top-2 -right-2 w-7 h-7 flex items-center justify-center text-sm font-black text-white bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-lg animate-pulse border-2 border-white">0</span>
+                    <button onclick="toggleCart(true)" class="relative p-4 bg-white/80 backdrop-blur rounded-2xl shadow-[0_5px_20px_rgba(0,0,0,0.06)] text-indigo-900 hover:scale-110 hover:shadow-xl hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 transition-all duration-300 border border-white">
+                        <i data-lucide="shopping-bag" class="w-7 h-7"></i>
+                        <span id="cart-badge" class="hidden absolute -top-2 -right-2 w-8 h-8 flex items-center justify-center text-sm font-black text-white bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-lg animate-bounce border-2 border-white">0</span>
                     </button>
                 </div>
             </div>
 
             <!-- STICKY CATEGORY NAV -->
-            <div class="w-full border-t border-gray-100 bg-white/50">
-                <div id="category-nav" class="max-w-7xl mx-auto px-4 py-2 flex gap-4 overflow-x-auto hide-scrollbar snap-x">
+            <div class="w-full border-t border-gray-100 bg-white/40 backdrop-blur-md">
+                <div id="category-nav" class="max-w-7xl mx-auto px-4 py-3 flex gap-4 overflow-x-auto hide-scrollbar snap-x">
                     <!-- Nav items injected here -->
                 </div>
             </div>
         </nav>
 
-        <div class="relative z-10 pt-36 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="relative z-10 pt-44 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             
-            <!-- HERO SECTION 3D -->
-            <div class="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-black shadow-2xl mb-12 transform hover:scale-[1.01] transition-transform duration-500">
-                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=2000')] opacity-20 mix-blend-luminosity bg-cover bg-center"></div>
-                <div class="relative p-10 md:p-20 text-center flex flex-col items-center justify-center">
-                    <span class="inline-block py-2 px-6 rounded-full bg-white/10 text-pink-300 text-sm font-black tracking-widest uppercase mb-6 backdrop-blur-md border border-white/10 shadow-[0_0_15px_rgba(236,72,153,0.3)]">
-                        Colección Exclusiva
+            <!-- HERO SECTION -->
+            <div class="relative rounded-[3rem] overflow-hidden bg-indigo-950 shadow-[0_30px_60px_-15px_rgba(79,70,229,0.4)] mb-16 transform hover:scale-[1.005] transition-all duration-700">
+                <!-- Abstract creative backgrounds instead of photos -->
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
+                <div class="absolute top-0 left-0 w-full h-full glass-pattern opacity-30"></div>
+                
+                <!-- Floating geometric shapes -->
+                <div class="absolute -top-20 -right-20 w-80 h-80 bg-gradient-to-br from-pink-500 to-orange-400 rounded-full mix-blend-screen opacity-50 blur-3xl animate-float"></div>
+                <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-gradient-to-tr from-cyan-500 to-blue-500 rounded-full mix-blend-screen opacity-50 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+
+                <div class="relative p-12 md:p-24 text-center flex flex-col items-center justify-center">
+                    <span class="inline-flex items-center gap-2 py-2 px-6 rounded-full bg-white/10 text-pink-300 text-sm font-black tracking-[0.2em] uppercase mb-8 backdrop-blur-md border border-white/20 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+                        <i data-lucide="stars" class="w-4 h-4"></i> Colección Exclusiva
                     </span>
-                    <h2 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight drop-shadow-2xl">
-                        Crea tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400">Outfit del Alma</span>
+                    <h2 class="text-5xl md:text-8xl font-black font-display text-white mb-6 leading-tight drop-shadow-2xl">
+                        Crea tu <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 animate-pulse-glow">Outfit del Alma</span>
                     </h2>
-                    <p class="text-xl text-indigo-100 mb-8 max-w-2xl font-medium drop-shadow-md">
-                        Lo que te pongas hoy se notará en tus palabras y decisiones. Construye un atuendo a tu medida.
+                    <p class="text-xl md:text-2xl text-indigo-100/90 mb-10 max-w-3xl font-medium drop-shadow-md leading-relaxed">
+                        Lo que te pongas hoy se notará en tus palabras y decisiones. Construye un atuendo a la medida de tu espíritu.
                     </p>
-                    <div class="flex flex-wrap items-center justify-center gap-4">
-                        <div class="bg-white/10 backdrop-blur-xl border border-white/20 px-6 py-4 rounded-2xl text-left flex items-center gap-4 shadow-xl">
-                            <i data-lucide="info" class="text-yellow-400 w-8 h-8 flex-shrink-0 drop-shadow-lg"></i>
-                            <p class="text-lg font-serif italic text-white drop-shadow-md">
-                                “Revístanse del Señor Jesucristo.” <br/><span class="text-sm font-sans not-italic text-pink-300 font-bold">(Romanos 13,14)</span>
-                            </p>
+                    
+                    <div class="bg-white/10 backdrop-blur-xl border border-white/20 px-8 py-5 rounded-3xl text-left flex items-center gap-5 shadow-2xl hover:bg-white/20 transition-colors cursor-default">
+                        <div class="bg-white/20 p-3 rounded-2xl">
+                            <i data-lucide="book-open" class="text-yellow-300 w-8 h-8 drop-shadow-lg"></i>
                         </div>
+                        <p class="text-xl font-serif italic text-white drop-shadow-md">
+                            “Revístanse del Señor Jesucristo.” <br/>
+                            <span class="text-sm font-sans not-italic text-pink-300 font-bold uppercase tracking-wider">(Romanos 13,14)</span>
+                        </p>
                     </div>
-                    <div class="absolute top-10 left-10 text-7xl drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transform -rotate-12 animate-bounce hover:scale-125 transition-transform cursor-pointer">🧥</div>
-                    <div class="absolute bottom-10 right-10 text-7xl drop-shadow-[0_20px_20px_rgba(0,0,0,0.5)] transform rotate-12 animate-pulse hover:scale-125 transition-transform cursor-pointer">👟</div>
+
+                    <!-- Emojis flotantes decorativos -->
+                    <div class="absolute top-16 left-16 text-6xl md:text-8xl drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transform -rotate-12 animate-float cursor-pointer hover:scale-125 transition-transform duration-300">💖</div>
+                    <div class="absolute bottom-16 right-16 text-6xl md:text-8xl drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transform rotate-12 animate-float cursor-pointer hover:scale-125 transition-transform duration-300" style="animation-delay: 1.5s;">✨</div>
                 </div>
             </div>
 
             <!-- FILTROS GLOBALES -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/60 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-white mb-12">
-                <h3 class="text-xl font-black text-indigo-900 flex items-center gap-2">
-                    <i data-lucide="filter" class="text-pink-500"></i> Para quién
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-white/60 backdrop-blur-xl p-5 rounded-[2.5rem] shadow-xl border border-white mb-16">
+                <h3 class="text-xl font-black text-indigo-900 flex items-center gap-3 pl-4">
+                    <div class="bg-pink-100 p-2 rounded-xl text-pink-600"><i data-lucide="sparkles"></i></div>
+                    Filtra tu estilo
                 </h3>
-                <div id="filters-container" class="flex flex-wrap gap-2 justify-center">
+                <div id="filters-container" class="flex flex-wrap gap-3 justify-center pr-2">
                     <!-- Filters injected here -->
                 </div>
             </div>
 
             <!-- SECCIONES DE PRODUCTOS -->
-            <div id="products-container" class="space-y-20">
+            <div id="products-container" class="space-y-24">
                 <!-- Products injected here -->
             </div>
         </div>
@@ -196,49 +248,55 @@
         <!-- SIDEBAR DEL CARRITO -->
         <div id="cart-container" class="fixed inset-0 z-50 pointer-events-none cart-open-target">
             <!-- Backdrop -->
-            <div class="cart-backdrop absolute inset-0 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-500 pointer-events-none" onclick="toggleCart(false)"></div>
+            <div class="cart-backdrop absolute inset-0 bg-indigo-950/40 backdrop-blur-md opacity-0 transition-opacity duration-500 pointer-events-none" onclick="toggleCart(false)"></div>
             
             <!-- Sidebar -->
-            <div class="cart-sidebar absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-[0_0_50px_rgba(0,0,0,0.3)] flex flex-col transform translate-x-full transition-transform duration-500 pointer-events-auto overflow-hidden">
+            <div class="cart-sidebar absolute right-0 top-0 h-full w-full max-w-md bg-[#f8fafc] shadow-[-20px_0_50px_rgba(0,0,0,0.2)] flex flex-col transform translate-x-full transition-transform duration-500 pointer-events-auto overflow-hidden rounded-l-[2.5rem]">
+                
                 <!-- Header -->
-                <div class="relative p-6 bg-gradient-to-br from-indigo-900 to-purple-900 text-white shadow-lg z-10">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-3xl font-black flex items-center gap-3 drop-shadow-md">
-                            <i data-lucide="shopping-bag" class="text-pink-400 w-8 h-8"></i> Mi Outfit
+                <div class="relative p-8 bg-white border-b border-gray-100 z-10">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-black font-display text-indigo-950 flex items-center gap-3">
+                            <div class="bg-pink-100 p-3 rounded-2xl text-pink-500">
+                                <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                            </div>
+                            Mi Outfit
                         </h2>
-                        <button onclick="toggleCart(false)" class="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+                        <button onclick="toggleCart(false)" class="p-3 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-2xl transition-colors">
                             <i data-lucide="x"></i>
                         </button>
                     </div>
 
                     <!-- Progress Bar -->
-                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/20">
-                        <div class="flex justify-between text-sm font-bold mb-2">
-                            <span>Progreso del Outfit</span>
-                            <span id="progress-text" class="text-pink-300">0/5 Categorías</span>
+                    <div class="bg-indigo-50 p-5 rounded-3xl border border-indigo-100">
+                        <div class="flex justify-between text-sm font-bold mb-3">
+                            <span class="text-indigo-900">Progreso de categorías</span>
+                            <span id="progress-text" class="text-pink-600">0/5 Completadas</span>
                         </div>
-                        <div class="w-full bg-black/30 rounded-full h-3 overflow-hidden">
-                            <div id="progress-bar" class="bg-gradient-to-r from-cyan-400 via-pink-400 to-yellow-400 h-3 rounded-full transition-all duration-1000 relative" style="width: 0%">
+                        <div class="w-full bg-indigo-100 rounded-full h-4 overflow-hidden shadow-inner">
+                            <div id="progress-bar" class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-500 h-full rounded-full transition-all duration-1000 relative" style="width: 0%">
                                 <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBsNDAtNDBIMHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4yKSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+')] opacity-50"></div>
                             </div>
                         </div>
-                        <p id="progress-complete" class="hidden text-xs text-center mt-2 text-cyan-300 font-bold animate-pulse">¡Tienes un outfit completo y poderoso! ✨</p>
+                        <p id="progress-complete" class="hidden text-sm text-center mt-3 text-indigo-600 font-bold flex items-center justify-center gap-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i> ¡Tienes un outfit completo!
+                        </p>
                     </div>
                 </div>
 
                 <!-- Items List -->
-                <div id="cart-items" class="flex-1 overflow-y-auto p-6 bg-slate-50 relative z-0 space-y-4">
+                <div id="cart-items" class="flex-1 overflow-y-auto p-6 relative z-0 space-y-4">
                     <!-- Items injected here or empty state -->
                 </div>
 
                 <!-- Footer -->
-                <div class="p-6 bg-white border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-10">
-                    <div class="flex justify-between items-center mb-6 bg-gray-50 p-4 rounded-2xl">
-                        <span class="text-gray-600 font-bold">Total de prendas:</span>
-                        <span id="cart-total-footer" class="text-3xl font-black text-indigo-900">0</span>
+                <div class="p-8 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] z-10">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-gray-500 font-bold text-lg">Total de prendas:</span>
+                        <span id="cart-total-footer" class="text-4xl font-black font-display text-indigo-900">0</span>
                     </div>
-                    <button id="checkout-btn" onclick="iniciarCompra()" disabled class="w-full py-5 bg-gradient-to-r from-gray-900 to-black text-white rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                        <i data-lucide="shopping-bag"></i> Finalizar Compra
+                    <button id="checkout-btn" onclick="iniciarCompra()" disabled class="w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-3xl font-black text-xl flex items-center justify-center gap-3 hover:shadow-[0_15px_30px_rgba(79,70,229,0.3)] hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <i data-lucide="sparkles"></i> Vestir mi Alma
                     </button>
                 </div>
             </div>
@@ -246,35 +304,45 @@
 
         <!-- MODAL DE CHECKOUT -->
         <div id="checkout-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-hidden transition-all duration-500">
-            <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-md" onclick="cerrarModalCheckout()"></div>
+            <div class="absolute inset-0 bg-indigo-950/60 backdrop-blur-lg" onclick="cerrarModalCheckout()"></div>
             
-            <div class="relative bg-white rounded-[2rem] p-8 md:p-12 max-w-lg w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] text-center transform transition-transform duration-500 scale-95" id="checkout-content-container">
+            <div class="relative bg-white rounded-[3rem] p-10 md:p-14 max-w-xl w-full shadow-[0_0_60px_rgba(0,0,0,0.3)] text-center transform transition-transform duration-500 scale-95 overflow-hidden" id="checkout-content-container">
+                <!-- Orbe decorativo modal -->
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-[50px] opacity-70"></div>
                 
                 <!-- State 1: Procesando -->
-                <div id="checkout-processing" class="flex flex-col items-center space-y-6">
-                    <div class="w-24 h-24 border-8 border-gray-100 border-t-pink-500 rounded-full animate-spin"></div>
-                    <h3 class="text-2xl font-black text-indigo-900">Procesando tu Outfit...</h3>
-                    <p class="text-gray-500 font-medium">Invirtiendo voluntad, paciencia y fe.</p>
+                <div id="checkout-processing" class="flex flex-col items-center space-y-8 relative z-10">
+                    <div class="relative w-32 h-32 flex items-center justify-center">
+                        <div class="absolute inset-0 border-8 border-gray-100 border-t-pink-500 rounded-full animate-spin"></div>
+                        <i data-lucide="heart" class="w-10 h-10 text-pink-500 animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-black font-display text-indigo-950 mb-2">Tejiendo tu Outfit...</h3>
+                        <p class="text-lg text-gray-500 font-medium">Invirtiendo voluntad, paciencia y fe.</p>
+                    </div>
                 </div>
 
                 <!-- State 2: Exito -->
-                <div id="checkout-success" class="hidden flex flex-col items-center space-y-6">
-                    <div class="w-28 h-28 bg-green-100 rounded-full flex items-center justify-center mb-2 animate-bounce">
-                        <i data-lucide="check-circle" class="text-green-500 w-16 h-16"></i>
+                <div id="checkout-success" class="hidden flex flex-col items-center space-y-6 relative z-10">
+                    <div class="w-32 h-32 bg-gradient-to-tr from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-2 shadow-[0_10px_30px_rgba(16,185,129,0.3)] animate-bounce-slow">
+                        <i data-lucide="check" class="text-white w-16 h-16 stroke-[3]"></i>
                     </div>
-                    <h3 class="text-3xl font-black text-gray-900">¡Compra Exitosa!</h3>
-                    <p class="text-lg text-gray-600">Tu Outfit del Alma está listo. Ya estás revestido para enfrentar el día de la mejor manera.</p>
+                    <div>
+                        <h3 class="text-4xl font-black font-display text-gray-900 mb-2">¡Alma Revestida!</h3>
+                        <p class="text-lg text-gray-600">Tu Outfit del Alma está listo. Ya estás preparado para enfrentar el día de la mejor manera.</p>
+                    </div>
                     
-                    <div class="w-full bg-gray-50 p-4 rounded-2xl border border-gray-100 mb-2">
-                        <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Resumen</p>
-                        <p class="text-xl font-black text-indigo-600"><span id="checkout-count">0</span> prendas adquiridas</p>
-                        <p class="text-sm text-gray-500 mt-2">Pagado con: <span class="font-bold text-pink-500">Voluntad y Fe</span></p>
+                    <div class="w-full bg-gray-50 p-6 rounded-3xl border border-gray-100 mt-4 mb-4 relative overflow-hidden">
+                        <div class="absolute left-0 top-0 w-2 h-full bg-gradient-to-b from-pink-400 to-indigo-500"></div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Resumen de Inversión</p>
+                        <p class="text-2xl font-black text-indigo-700"><span id="checkout-count">0</span> prendas adquiridas</p>
+                        <p class="text-base text-gray-500 mt-2">Pagado con: <span class="font-black text-pink-500 bg-pink-50 px-3 py-1 rounded-full">Voluntad y Fe</span></p>
                     </div>
 
-                    <button onclick="handlePrint()" class="w-full py-4 mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:shadow-[0_10px_20px_rgba(79,70,229,0.4)] hover:-translate-y-1 transition-all">
-                        <i data-lucide="printer"></i> Descargar Recibo (PDF)
+                    <button onclick="handlePrint()" class="w-full py-5 bg-indigo-950 text-white rounded-3xl font-black text-lg flex items-center justify-center gap-3 hover:bg-indigo-900 hover:shadow-[0_15px_30px_rgba(30,27,75,0.4)] hover:-translate-y-1 transition-all">
+                        <i data-lucide="download"></i> Descargar Recordatorio (PDF)
                     </button>
-                    <button onclick="cerrarModalCheckout()" class="w-full py-3 text-gray-500 hover:text-gray-800 font-bold transition-colors">
+                    <button onclick="cerrarModalCheckout()" class="w-full py-3 text-gray-400 hover:text-gray-800 font-bold transition-colors">
                         Cerrar y volver a la tienda
                     </button>
                 </div>
@@ -282,9 +350,9 @@
         </div>
 
         <!-- TOAST NOTIFICATION -->
-        <div id="toast" class="toast-hidden fixed bottom-10 left-1/2 flex items-center gap-4 bg-gray-900/90 backdrop-blur-xl border border-white/20 text-white px-8 py-4 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.4)] font-bold text-base transition-all duration-300 z-50">
-            <div class="bg-green-400 text-gray-900 rounded-full p-1">
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
+        <div id="toast" class="toast-hidden fixed bottom-10 left-1/2 flex items-center gap-4 bg-indigo-950/95 backdrop-blur-xl border border-white/10 text-white px-8 py-4 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.4)] font-bold text-base transition-all duration-300 z-50">
+            <div class="bg-pink-500 text-white rounded-full p-1.5 shadow-[0_0_10px_rgba(236,72,153,0.5)]">
+                <i data-lucide="check" class="w-5 h-5 stroke-[3]"></i>
             </div>
             <span id="toast-message">Mensaje de prueba</span>
         </div>
@@ -294,49 +362,56 @@
     <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
         // --- DATA ---
+        // Se reemplazan las imágenes (img) por emojis/íconos conceptuales (icon) para el diseño creativo (Glassmorphism)
         const products = [
-            { id: 1, name: 'Camisa de la Perseverancia', category: 'Camisas', gender: 'Dama', desc: 'Hoy decido no rendirme, aunque el camino se ponga difícil. La perseverancia me recuerda que cada esfuerzo vale la pena.', verse: '“Corramos con perseverancia la carrera que tenemos por delante.” (Hebreos 12,1)', img: 'https://images.unsplash.com/photo-1551723448-6a2db8de6c80?auto=format&fit=crop&q=80&w=400', color: 'from-pink-400 to-rose-500' },
-            { id: 2, name: 'Camisa de la Alegría', category: 'Camisas', gender: 'Dama', desc: 'Me visto de alegría, no porque todo sea perfecto, sino porque confío en Dios.', verse: '“Estén siempre alegres en el Señor.” (Filipenses 4,4)', img: 'https://images.unsplash.com/photo-1572804013309-82a89b43afed?auto=format&fit=crop&q=80&w=400', color: 'from-yellow-400 to-orange-500' },
-            { id: 3, name: 'Camisa de la Gratitud', category: 'Camisas', gender: 'Dama', desc: 'Hoy agradezco lo que soy, lo que tengo y lo que estoy aprendiendo.', verse: '“Den gracias en toda circunstancia.” (1 Tesalonicenses 5,18)', img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&q=80&w=400', color: 'from-emerald-400 to-teal-500' },
-            { id: 4, name: 'Camisa de la Compasión', category: 'Camisas', gender: 'Dama', desc: 'Me pongo esta camisa para mirar a los demás con ternura y respeto.', verse: '“Revístanse de compasión, bondad y humildad.” (Colosenses 3,12)', img: 'https://images.unsplash.com/photo-1434389678369-1052f78235e2?auto=format&fit=crop&q=80&w=400', color: 'from-purple-400 to-fuchsia-500' },
-            { id: 5, name: 'Camisa de la Esperanza', category: 'Camisas', gender: 'Dama', desc: 'Aunque no vea todo claro, sigo creyendo que Dios guía mis pasos.', verse: '“La esperanza no defrauda.” (Romanos 5,5)', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=400', color: 'from-sky-400 to-blue-500' },
-            { id: 6, name: 'Camisa de la Fortaleza', category: 'Camisas', gender: 'Caballero', desc: 'Hoy enfrento los retos con valentía y confianza.', verse: '“Todo lo puedo en Aquel que me fortalece.” (Filipenses 4,13)', img: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ce3?auto=format&fit=crop&q=80&w=400', color: 'from-red-500 to-orange-600' },
-            { id: 7, name: 'Camisa de la Honestidad', category: 'Camisas', gender: 'Caballero', desc: 'Decido actuar con transparencia, incluso cuando nadie me ve.', verse: '“El Señor ama la justicia y el derecho.” (Salmo 33,5)', img: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=400', color: 'from-slate-400 to-slate-600' },
+            { id: 1, name: 'Camisa de la Perseverancia', category: 'Camisas', gender: 'Dama', desc: 'Decido no rendirme. La perseverancia me recuerda que cada esfuerzo vale la pena.', verse: '“Corramos con perseverancia la carrera que tenemos por delante.” (Hebreos 12,1)', img: 'https://images.pexels.com/photos/6311392/pexels-photo-6311392.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-pink-400 to-rose-600' },
+            { id: 2, name: 'Camisa de la Alegría', category: 'Camisas', gender: 'Dama', desc: 'Me visto de alegría, no porque todo sea perfecto, sino porque confío.', verse: '“Estén siempre alegres en el Señor.” (Filipenses 4,4)', img: 'https://images.pexels.com/photos/7691217/pexels-photo-7691217.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-yellow-400 to-orange-500' },
+            { id: 3, name: 'Camisa de la Gratitud', category: 'Camisas', gender: 'Dama', desc: 'Hoy agradezco lo que soy, lo que tengo y lo que estoy aprendiendo.', verse: '“Den gracias en toda circunstancia.” (1 Tesalonicenses 5,18)', img: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-emerald-400 to-teal-500' },
+            { id: 4, name: 'Camisa de la Compasión', category: 'Camisas', gender: 'Dama', desc: 'Me pongo esta camisa para mirar a los demás con ternura y respeto.', verse: '“Revístanse de compasión, bondad y humildad.” (Colosenses 3,12)', img: 'https://images.pexels.com/photos/996329/pexels-photo-996329.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-purple-400 to-fuchsia-500' },
+            { id: 5, name: 'Camisa de la Esperanza', category: 'Camisas', gender: 'Dama', desc: 'Aunque no vea todo claro, sigo creyendo que mis pasos son guiados.', verse: '“La esperanza no defrauda.” (Romanos 5,5)', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=400', color: 'from-sky-400 to-blue-500' },
+            
+            { id: 6, name: 'Camisa de la Fortaleza', category: 'Camisas', gender: 'Caballero', desc: 'Hoy enfrento los retos con valentía y confianza inquebrantable.', verse: '“Todo lo puedo en Aquel que me fortalece.” (Filipenses 4,13)', img: 'https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-red-500 to-orange-600' },
+            { id: 7, name: 'Camisa de la Honestidad', category: 'Camisas', gender: 'Caballero', desc: 'Decido actuar con transparencia, incluso cuando nadie me ve.', verse: '“El Señor ama la justicia y el derecho.” (Salmo 33,5)', img: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=400', color: 'from-slate-500 to-gray-700' },
             { id: 8, name: 'Camisa del Servicio', category: 'Camisas', gender: 'Caballero', desc: 'Me pongo esta camisa para servir sin esperar aplausos.', verse: '“El que quiera ser el primero, que sea servidor de todos.” (Marcos 9,35)', img: 'https://images.unsplash.com/photo-1618517351616-38fb9c5210c6?auto=format&fit=crop&q=80&w=400', color: 'from-amber-400 to-yellow-600' },
-            { id: 9, name: 'Camisa de la Responsabilidad', category: 'Camisas', gender: 'Caballero', desc: 'Asumo mis decisiones y cumplo mi palabra.', verse: '“El que es fiel en lo poco, también en lo mucho es fiel.” (Lucas 16,10)', img: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=400', color: 'from-blue-600 to-indigo-800' },
-            { id: 10, name: 'Camisa de la Fe', category: 'Camisas', gender: 'Caballero', desc: 'Hoy camino confiando, aunque no tenga todas las respuestas.', verse: '“Caminen por la fe, no por la vista.” (2 Corintios 5,7)', img: 'https://images.unsplash.com/photo-1507680434267-325625a92d59?auto=format&fit=crop&q=80&w=400', color: 'from-cyan-400 to-blue-500' },
-            { id: 11, name: 'Jeans de la Paciencia', category: 'Jeans', gender: 'Unisex', desc: 'Aprendo a esperar sin desesperarme.', verse: '“Sean pacientes en la tribulación.” (Romanos 12,12)', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=400', color: 'from-indigo-400 to-blue-600' },
-            { id: 12, name: 'Jeans de la Humildad', category: 'Jeans', gender: 'Unisex', desc: 'Camino sin sentirme más que nadie.', verse: '“Dios enaltece a los humildes.” (Santiago 4,10)', img: 'https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&q=80&w=400', color: 'from-stone-400 to-stone-600' },
-            { id: 13, name: 'Jeans de la Justicia', category: 'Jeans', gender: 'Unisex', desc: 'Actúo buscando el bien común.', verse: '“Practiquen la justicia.” (Miqueas 6,8)', img: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&q=80&w=400', color: 'from-sky-500 to-indigo-600' },
-            { id: 14, name: 'Jeans de la Solidaridad', category: 'Jeans', gender: 'Unisex', desc: 'No camino solo; acompaño y me dejo acompañar.', verse: '“Lleven los unos las cargas de los otros.” (Gálatas 6,2)', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=400', color: 'from-teal-400 to-emerald-600' },
-            { id: 15, name: 'Jeans de la Coherencia', category: 'Jeans', gender: 'Unisex', desc: 'Vivo lo que creo.', verse: '“Que su sí sea sí.” (Mateo 5,37)', img: 'https://images.unsplash.com/photo-1529391409740-59f2cea08bc6?auto=format&fit=crop&q=80&w=400', color: 'from-violet-500 to-purple-700' },
-            { id: 16, name: 'Zapatos de la Paz', category: 'Zapatos', gender: 'Unisex', desc: 'Camino sembrando reconciliación.', verse: '“Dichosos los que trabajan por la paz.” (Mateo 5,9)', img: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&q=80&w=400', color: 'from-slate-300 to-slate-500' },
-            { id: 17, name: 'Zapatos del Perdón', category: 'Zapatos', gender: 'Unisex', desc: 'Hoy elijo soltar rencores.', verse: '“Perdónense como Dios los perdonó.” (Efesios 4,32)', img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=400', color: 'from-rose-300 to-pink-500' },
-            { id: 18, name: 'Zapatos de la Confianza', category: 'Zapatos', gender: 'Unisex', desc: 'No tengo miedo, Dios va conmigo.', verse: '“No temas, yo estoy contigo.” (Isaías 41,10)', img: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=400', color: 'from-amber-300 to-yellow-500' },
-            { id: 19, name: 'Collar de la Dignidad', category: 'Accesorios', gender: 'Dama', desc: 'Recuerdo que soy hija amada de Dios.', verse: '“Eres valioso a mis ojos.” (Isaías 43,4)', img: 'https://images.unsplash.com/photo-1599643478524-fb66f483c660?auto=format&fit=crop&q=80&w=400', color: 'from-fuchsia-300 to-purple-500' },
-            { id: 20, name: 'Aretes de la Escucha', category: 'Accesorios', gender: 'Dama', desc: 'Antes de hablar, aprendo a escuchar.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400', color: 'from-emerald-300 to-green-500' },
-            { id: 21, name: 'Bolso de la Generosidad', category: 'Accesorios', gender: 'Dama', desc: 'Llevo conmigo la disposición de compartir.', verse: '“Hay más alegría en dar.” (Hechos 20,35)', img: 'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&q=80&w=400', color: 'from-rose-400 to-red-500' },
-            { id: 22, name: 'Moños de la Alegría', category: 'Accesorios', gender: 'Dama', desc: 'Llevo una actitud que ilumina los ambientes.', verse: '“Alégrense siempre.” (1 Tesalonicenses 5,16)', img: 'https://images.unsplash.com/photo-1605380590892-0691e8dd405a?auto=format&fit=crop&q=80&w=400', color: 'from-yellow-300 to-amber-500' },
-            { id: 23, name: 'Espejo de la Autoestima', category: 'Accesorios', gender: 'Dama', desc: 'Me miro con los ojos de Dios, no con los de la crítica.', verse: '“Eres preciosa a mis ojos.” (Isaías 43,4)', img: 'https://images.unsplash.com/photo-1618214247548-7d526fa45d62?auto=format&fit=crop&q=80&w=400', color: 'from-pink-200 to-rose-400' },
-            { id: 24, name: 'Maquillaje de la Autenticidad', category: 'Accesorios', gender: 'Dama', desc: 'No escondo quién soy.', verse: '“El hombre mira las apariencias, pero Dios mira el corazón.” (1 Samuel 16,7)', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400', color: 'from-purple-300 to-indigo-500' },
-            { id: 25, name: 'Reloj de la Disciplina', category: 'Accesorios', gender: 'Caballero', desc: 'Administro bien mi tiempo y mis responsabilidades.', verse: '“Aprovechen bien el tiempo.” (Efesios 5,16)', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=400', color: 'from-slate-500 to-slate-800' },
-            { id: 26, name: 'Gorra de la Identidad', category: 'Accesorios', gender: 'Caballero', desc: 'No me dejo definir por las modas, sino por mis valores.', verse: '“Ustedes son sal de la tierra.” (Mateo 5,13)', img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=400', color: 'from-blue-500 to-blue-700' },
-            { id: 27, name: 'Gel del Orden Interior', category: 'Accesorios', gender: 'Caballero', desc: 'Organizo mis prioridades antes de actuar.', verse: '“Todo hágase con orden.” (1 Corintios 14,40)', img: 'https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=400', color: 'from-cyan-300 to-blue-500' },
-            { id: 28, name: 'Cinturón de la Verdad', category: 'Accesorios', gender: 'Caballero', desc: 'Me ajusto a la verdad, no a la mentira.', verse: '“Manténganse firmes, ceñidos con la verdad.” (Efesios 6,14)', img: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&q=80&w=400', color: 'from-amber-700 to-orange-900' },
-            { id: 29, name: 'Audífonos de la Escucha Activa', category: 'Accesorios', gender: 'Caballero', desc: 'Escucho para comprender, no solo para responder.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400', color: 'from-zinc-400 to-zinc-700' },
-            { id: 30, name: 'Buso de la Confianza en Dios', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Aunque el día esté frío o complicado, confío en que no estoy solo.', verse: '“El Señor es mi refugio.” (Salmo 91,2)', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=400', color: 'from-sky-300 to-blue-500' },
-            { id: 31, name: 'Chaqueta de la Resiliencia', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Si algo no sale como esperaba, me levanto y sigo adelante.', verse: '“Siete veces cae el justo y vuelve a levantarse.” (Proverbios 24,16)', img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=400', color: 'from-orange-400 to-red-600' },
-            { id: 32, name: 'Chaqueta del Autocontrol', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No reacciono por impulso. Pienso antes de actuar.', verse: '“Mejor es el que domina su espíritu.” (Proverbios 16,32)', img: 'https://images.unsplash.com/photo-1520975954732-57dd22299614?auto=format&fit=crop&q=80&w=400', color: 'from-slate-600 to-slate-900' },
-            { id: 33, name: 'Buso de la Identidad', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No necesito imitar a nadie. Soy único y valioso.', verse: '“Te he creado de manera admirable.” (Salmo 139,14)', img: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=400', color: 'from-fuchsia-500 to-purple-700' },
-            { id: 34, name: 'Sombrero de la Prudencia', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No todo lo que puedo hacer me conviene hacerlo.', verse: '“Todo me es lícito, pero no todo me conviene.” (1 Corintios 6,12)', img: 'https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&q=80&w=400', color: 'from-stone-500 to-stone-700' },
+            { id: 9, name: 'Camisa de la Responsabilidad', category: 'Camisas', gender: 'Caballero', desc: 'Asumo mis decisiones y cumplo mi palabra a cabalidad.', verse: '“El que es fiel en lo poco, también en lo mucho es fiel.” (Lucas 16,10)', img: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=400', color: 'from-blue-500 to-indigo-700' },
+            { id: 10, name: 'Camisa de la Fe', category: 'Camisas', gender: 'Caballero', desc: 'Hoy camino confiando, aunque no tenga todas las respuestas a la mano.', verse: '“Caminen por la fe, no por la vista.” (2 Corintios 5,7)', img: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-cyan-400 to-blue-600' },
+            
+            { id: 11, name: 'Jeans de la Paciencia', category: 'Jeans', gender: 'Unisex', desc: 'Aprendo a esperar sin desesperarme en el proceso.', verse: '“Sean pacientes en la tribulación.” (Romanos 12,12)', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=400', color: 'from-indigo-400 to-blue-700' },
+            { id: 12, name: 'Jeans de la Humildad', category: 'Jeans', gender: 'Unisex', desc: 'Camino con pies de plomo sin sentirme más que nadie.', verse: '“Dios enaltece a los humildes.” (Santiago 4,10)', img: 'https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&q=80&w=400', color: 'from-stone-500 to-stone-700' },
+            { id: 13, name: 'Jeans de la Justicia', category: 'Jeans', gender: 'Unisex', desc: 'Actúo siempre buscando el bien común y la equidad.', verse: '“Practiquen la justicia.” (Miqueas 6,8)', img: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&q=80&w=400', color: 'from-sky-500 to-indigo-600' },
+            { id: 14, name: 'Jeans de la Solidaridad', category: 'Jeans', gender: 'Unisex', desc: 'No camino solo; acompaño y me dejo acompañar en la ruta.', verse: '“Lleven los unos las cargas de los otros.” (Gálatas 6,2)', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=400', color: 'from-teal-400 to-emerald-600' },
+            { id: 15, name: 'Jeans de la Coherencia', category: 'Jeans', gender: 'Unisex', desc: 'Vivo lo que creo firmemente cada día.', verse: '“Que su sí sea sí.” (Mateo 5,37)', img: 'https://images.unsplash.com/photo-1529391409740-59f2cea08bc6?auto=format&fit=crop&q=80&w=400', color: 'from-violet-500 to-purple-700' },
+            
+            { id: 16, name: 'Zapatos de la Paz', category: 'Zapatos', gender: 'Unisex', desc: 'Camino sembrando reconciliación por donde paso.', verse: '“Dichosos los que trabajan por la paz.” (Mateo 5,9)', img: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&q=80&w=400', color: 'from-slate-400 to-slate-600' },
+            { id: 17, name: 'Zapatos del Perdón', category: 'Zapatos', gender: 'Unisex', desc: 'Hoy elijo soltar rencores y andar ligero.', verse: '“Perdónense como Dios los perdonó.” (Efesios 4,32)', img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=400', color: 'from-rose-400 to-pink-600' },
+            { id: 18, name: 'Zapatos de la Confianza', category: 'Zapatos', gender: 'Unisex', desc: 'No tengo miedo, sé que Dios va conmigo en cada paso.', verse: '“No temas, yo estoy contigo.” (Isaías 41,10)', img: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=400', color: 'from-amber-400 to-orange-500' },
+            
+            { id: 19, name: 'Collar de la Dignidad', category: 'Accesorios', gender: 'Dama', desc: 'Recuerdo siempre que soy hija amada de Dios.', verse: '“Eres valioso a mis ojos.” (Isaías 43,4)', img: 'https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-fuchsia-400 to-purple-600' },
+            { id: 20, name: 'Aretes de la Escucha', category: 'Accesorios', gender: 'Dama', desc: 'Antes de hablar, aprendo a escuchar con el corazón.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400', color: 'from-emerald-400 to-green-600' },
+            { id: 21, name: 'Bolso de la Generosidad', category: 'Accesorios', gender: 'Dama', desc: 'Llevo conmigo la disposición infinita de compartir.', verse: '“Hay más alegría en dar.” (Hechos 20,35)', img: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-rose-400 to-red-500' },
+            { id: 22, name: 'Moños de la Alegría', category: 'Accesorios', gender: 'Dama', desc: 'Llevo una actitud que ilumina todos los ambientes.', verse: '“Alégrense siempre.” (1 Tesalonicenses 5,16)', img: 'https://images.pexels.com/photos/1805411/pexels-photo-1805411.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-yellow-400 to-amber-500' },
+            { id: 23, name: 'Espejo de la Autoestima', category: 'Accesorios', gender: 'Dama', desc: 'Me miro con los ojos del amor, no con los de la crítica.', verse: '“Eres preciosa a mis ojos.” (Isaías 43,4)', img: 'https://images.pexels.com/photos/2853432/pexels-photo-2853432.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-pink-300 to-rose-500' },
+            { id: 24, name: 'Maquillaje Auténtico', category: 'Accesorios', gender: 'Dama', desc: 'No escondo quién soy, mi esencia brilla.', verse: '“Dios mira el corazón.” (1 Samuel 16,7)', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400', color: 'from-purple-400 to-indigo-600' },
+            
+            { id: 25, name: 'Reloj de la Disciplina', category: 'Accesorios', gender: 'Caballero', desc: 'Administro bien mi tiempo y valoro mis responsabilidades.', verse: '“Aprovechen bien el tiempo.” (Efesios 5,16)', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=400', color: 'from-slate-600 to-slate-800' },
+            { id: 26, name: 'Gorra de la Identidad', category: 'Accesorios', gender: 'Caballero', desc: 'No me dejo definir por modas, sino por mis valores sólidos.', verse: '“Ustedes son sal de la tierra.” (Mateo 5,13)', img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=400', color: 'from-blue-500 to-blue-700' },
+            { id: 27, name: 'Gel del Orden Interior', category: 'Accesorios', gender: 'Caballero', desc: 'Organizo mis prioridades antes de actuar.', verse: '“Todo hágase con orden.” (1 Corintios 14,40)', img: 'https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=400', color: 'from-cyan-400 to-blue-600' },
+            { id: 28, name: 'Cinturón de la Verdad', category: 'Accesorios', gender: 'Caballero', desc: 'Me ajusto a la verdad, y desecho la mentira.', verse: '“Manténganse firmes con la verdad.” (Efesios 6,14)', img: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&q=80&w=400', color: 'from-amber-600 to-orange-800' },
+            { id: 29, name: 'Audífonos Activos', category: 'Accesorios', gender: 'Caballero', desc: 'Escucho para comprender profundamente, no solo para responder.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400', color: 'from-zinc-500 to-zinc-800' },
+            
+            { id: 30, name: 'Buso de Confianza', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Aunque el día esté frío o complicado, sé que no estoy solo.', verse: '“El Señor es mi refugio.” (Salmo 91,2)', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=400', color: 'from-sky-400 to-blue-600' },
+            { id: 31, name: 'Chaqueta Resiliente', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Si algo no sale como esperaba, me levanto con más fuerza.', verse: '“Siete veces cae el justo y vuelve a levantarse.” (Proverbios 24,16)', img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=400', color: 'from-orange-500 to-red-600' },
+            { id: 32, name: 'Chaqueta de Control', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No reacciono por impulso. Pienso, respiro, actúo.', verse: '“Mejor es el que domina su espíritu.” (Proverbios 16,32)', img: 'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-slate-700 to-black' },
+            { id: 33, name: 'Buso de la Identidad', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No necesito imitar a nadie. Soy una creación única.', verse: '“Te he creado de manera admirable.” (Salmo 139,14)', img: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=400', color: 'from-fuchsia-500 to-purple-800' },
+            { id: 34, name: 'Sombrero Prudente', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No todo lo que puedo hacer me conviene hacerlo hoy.', verse: '“Todo me es lícito, pero no todo me conviene.” (1 Corintios 6,12)', img: 'https://images.unsplash.com/photo-1533055640609-24b498dfd74c?auto=format&fit=crop&q=80&w=400', color: 'from-stone-600 to-stone-800' },
         ];
 
         const categoriesData = [
-            { id: 'Camisas', name: 'Camisas', emoji: '👕', desc: 'Lo que cubre el corazón' },
-            { id: 'Jeans', name: 'Jeans', emoji: '👖', desc: 'Lo que sostiene el caminar' },
-            { id: 'Zapatos', name: 'Zapatos', emoji: '👟', desc: 'Cómo decido avanzar' },
-            { id: 'Accesorios', name: 'Accesorios', emoji: '💍', desc: 'Detalles que marcan la diferencia' },
-            { id: 'Prendas Adicionales', name: 'Extras', emoji: '🧥', desc: 'Para los climas difíciles' }
+            { id: 'Camisas', name: 'Camisas', emoji: '👕', desc: 'Lo que cubre y protege tu corazón' },
+            { id: 'Jeans', name: 'Jeans', emoji: '👖', desc: 'Lo que sostiene tu caminar diario' },
+            { id: 'Zapatos', name: 'Zapatos', emoji: '👟', desc: 'La forma en la que decides avanzar' },
+            { id: 'Accesorios', name: 'Accesorios', emoji: '💍', desc: 'Detalles que marcan una gran diferencia' },
+            { id: 'Prendas Adicionales', name: 'Extras', emoji: '🧥', desc: 'Para abrigarte en los climas difíciles' }
         ];
 
         // --- STATE ---
@@ -344,29 +419,28 @@
         let currentFilter = 'Todos';
 
         // --- AUDIO ENGINE ---
-        // Generador de sonidos nativo del navegador (sin archivos externos)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playMagicChime() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             try {
                 const now = audioCtx.currentTime;
-                const playTone = (freq, startTime, duration) => {
+                const playTone = (freq, startTime, duration, type='sine') => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-                    osc.type = 'sine';
+                    osc.type = type;
                     osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0.1, startTime);
+                    gain.gain.setValueAtTime(0.05, startTime);
                     gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
                     osc.start(startTime);
                     osc.stop(startTime + duration);
                 };
-                // Acorde mágico (Do, Mi, Sol)
-                playTone(523.25, now, 0.4); // C5
-                playTone(659.25, now + 0.1, 0.4); // E5
-                playTone(783.99, now + 0.2, 0.6); // G5
+                playTone(523.25, now, 0.4); 
+                playTone(659.25, now + 0.1, 0.4); 
+                playTone(783.99, now + 0.2, 0.6); 
+                playTone(1046.50, now + 0.3, 0.8, 'triangle'); 
             } catch(e) { console.warn("Audio error:", e); }
         }
 
@@ -376,8 +450,8 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.1);
                 gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
                 osc.connect(gain);
@@ -401,7 +475,7 @@
         function renderCategoryNav() {
             const nav = document.getElementById('category-nav');
             nav.innerHTML = categoriesData.map(cat => `
-                <button onclick="scrollToSection('${cat.id}')" class="flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full hover:bg-white hover:shadow-md transition-all snap-center font-bold text-gray-600 hover:text-indigo-600">
+                <button onclick="scrollToSection('${cat.id}')" class="flex items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full hover:bg-white hover:shadow-[0_5px_15px_rgba(0,0,0,0.05)] transition-all snap-center font-bold text-gray-500 hover:text-indigo-600 border border-transparent hover:border-gray-200">
                     <span class="text-xl drop-shadow-sm">${cat.emoji}</span> ${cat.name}
                 </button>
             `).join('');
@@ -412,8 +486,8 @@
             const filters = ['Todos', 'Dama', 'Caballero'];
             container.innerHTML = filters.map(f => {
                 const activeClass = f === currentFilter 
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-[0_10px_20px_rgba(79,70,229,0.4)] scale-105'
-                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200';
+                    ? 'bg-indigo-950 text-white shadow-[0_10px_20px_rgba(30,27,75,0.3)] scale-105'
+                    : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200';
                 return `<button onclick="setFilter('${f}')" class="px-8 py-3 rounded-2xl text-sm font-black transition-all duration-300 ${activeClass}">${f}</button>`;
             }).join('');
         }
@@ -432,14 +506,16 @@
                 if (categoryProducts.length === 0) return;
 
                 let sectionHTML = `
-                    <section id="${category.id}" class="scroll-mt-36">
-                        <div class="flex flex-col md:flex-row items-center gap-6 mb-8 bg-white/40 p-6 rounded-3xl border border-white backdrop-blur-sm shadow-sm">
-                            <div class="text-7xl drop-shadow-[0_15px_15px_rgba(0,0,0,0.3)] transform hover:scale-110 hover:-rotate-12 transition-all duration-300">
+                    <section id="${category.id}" class="scroll-mt-40">
+                        <div class="flex flex-col md:flex-row items-center gap-6 mb-10 bg-white/50 p-8 rounded-[2.5rem] border border-white backdrop-blur-xl shadow-lg relative overflow-hidden">
+                            <div class="absolute right-0 top-0 w-64 h-64 bg-gradient-to-br from-pink-200 to-transparent rounded-full mix-blend-multiply opacity-50 -translate-y-1/2 translate-x-1/2"></div>
+                            
+                            <div class="text-6xl drop-shadow-[0_10px_10px_rgba(0,0,0,0.2)] transform hover:scale-110 hover:rotate-12 transition-all duration-500 relative z-10 bg-white p-6 rounded-3xl shadow-xl">
                                 ${category.emoji}
                             </div>
-                            <div class="text-center md:text-left">
-                                <h2 class="text-4xl font-black text-gray-900 tracking-tight">${category.name}</h2>
-                                <p class="text-lg text-pink-600 font-bold mt-1">${category.desc}</p>
+                            <div class="text-center md:text-left relative z-10">
+                                <h2 class="text-4xl font-black font-display text-indigo-950 tracking-tight">${category.name}</h2>
+                                <p class="text-lg text-pink-500 font-bold mt-2">${category.desc}</p>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -449,36 +525,45 @@
                     const inCart = cart.some(item => item.id === product.id);
                     
                     const btnClass = inCart 
-                        ? 'bg-green-100 text-green-700 border-2 border-green-300 shadow-inner'
-                        : 'btn-mirror bg-gray-900 text-white hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 shadow-[0_10px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_30px_rgba(79,70,229,0.4)] hover:-translate-y-1';
+                        ? 'bg-emerald-50 text-emerald-600 border-2 border-emerald-200 shadow-inner'
+                        : 'btn-mirror bg-indigo-950 text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(236,72,153,0.3)] hover:-translate-y-1';
                         
                     const btnContent = inCart
-                        ? `<i data-lucide="check-circle" class="w-5 h-5 animate-bounce"></i> Puesto en mi alma`
-                        : `<i data-lucide="plus" class="w-5 h-5"></i> Poner en mi alma`;
+                        ? `<i data-lucide="check-circle-2" class="w-5 h-5 animate-pulse"></i> Equipado en mi alma`
+                        : `<i data-lucide="plus" class="w-5 h-5"></i> Revestir mi alma`;
+
+                    // Creación visual usando las imágenes originales pero con el estilo de la nueva UI
+                    const visualAbstract = `
+                        <div class="relative h-64 overflow-hidden group-hover:shadow-inner transition-all duration-500 bg-gray-100">
+                            <!-- Overlay de color en degradado suave -->
+                            <div class="absolute inset-0 bg-gradient-to-tr ${product.color} opacity-40 mix-blend-multiply group-hover:opacity-20 transition-opacity duration-500 z-10"></div>
+                            
+                            <!-- Imagen Original de Unsplash/Pexels -->
+                            <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 relative z-0" />
+                            
+                            <!-- Badge de Género -->
+                            <div class="absolute top-5 left-5 z-20">
+                                <span class="bg-white/90 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-2xl text-indigo-900 shadow-lg border border-white/50 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full ${product.gender==='Dama'?'bg-pink-400':(product.gender==='Caballero'?'bg-blue-400':'bg-purple-400')}"></span> ${product.gender}
+                                </span>
+                            </div>
+                        </div>
+                    `;
 
                     sectionHTML += `
-                        <div class="group relative bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-[0_30px_50px_rgba(0,0,0,0.15)] transition-all duration-500 transform hover:-translate-y-4 flex flex-col h-full border-2 border-transparent hover:border-pink-200 z-10">
-                            <div class="relative h-64 overflow-hidden">
-                                <div class="absolute inset-0 bg-gradient-to-tr ${product.color} opacity-70 mix-blend-multiply group-hover:opacity-40 transition-opacity duration-500 z-10"></div>
-                                <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover transform group-hover:scale-125 transition-transform duration-1000" />
-                                <div class="absolute top-4 left-4 z-20 flex gap-2">
-                                    <span class="bg-white/90 backdrop-blur-md text-xs font-black uppercase tracking-wider px-4 py-2 rounded-full text-gray-900 shadow-lg">
-                                        ${product.gender}
-                                    </span>
-                                </div>
-                                <div class="absolute -bottom-10 left-0 w-full h-20 bg-gradient-to-t ${product.color} opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-500 z-20"></div>
-                            </div>
+                        <div class="group relative bg-white rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-[0_40px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 transform hover:-translate-y-3 flex flex-col h-full border border-gray-100 z-10">
+                            ${visualAbstract}
                             
                             <div class="p-8 flex flex-col flex-grow relative bg-white z-30">
-                                <h4 class="text-2xl font-black text-gray-900 leading-tight mb-3 group-hover:text-indigo-600 transition-colors">${product.name}</h4>
-                                <p class="text-base text-gray-600 mb-6 flex-grow leading-relaxed font-medium">${product.desc}</p>
+                                <h4 class="text-2xl font-black font-display text-indigo-950 leading-tight mb-3 group-hover:text-pink-600 transition-colors">${product.name}</h4>
+                                <p class="text-sm text-gray-500 mb-6 flex-grow leading-relaxed font-medium">${product.desc}</p>
                                 
-                                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 mb-6 relative overflow-hidden group-hover:bg-indigo-50 transition-colors">
-                                    <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-pink-400 to-indigo-500"></div>
-                                    <p class="text-sm font-serif italic text-gray-800 font-medium">${product.verse}</p>
+                                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 mb-6 relative overflow-hidden group-hover:bg-indigo-50/50 transition-colors">
+                                    <div class="absolute left-0 top-0 w-1.5 h-full bg-gradient-to-b ${product.color}"></div>
+                                    <p class="text-sm font-serif italic text-gray-700 font-medium leading-relaxed pl-2">"${product.verse.replace(/“|”/g,'')}"</p>
                                 </div>
 
-                                <button onclick="addToCart(${product.id})" class="w-full py-4 rounded-2xl font-black text-lg flex justify-center items-center gap-2 transition-all duration-300 ${btnClass}">
+                                <button onclick="addToCart(${product.id})" class="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex justify-center items-center gap-3 transition-all duration-300 ${btnClass}">
                                     ${btnContent}
                                 </button>
                             </div>
@@ -505,7 +590,7 @@
             playPop();
             const element = document.getElementById(id);
             if (element) {
-                const yOffset = -120; 
+                const yOffset = -140; 
                 const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
                 window.scrollTo({ top: y, behavior: 'smooth' });
             }
@@ -518,7 +603,7 @@
                 cart.push(product);
                 showToast(`¡Añadiste "${product.name}" a tu alma!`);
                 updateCartUI();
-                renderProducts(); // Update button states
+                renderProducts(); 
             } else {
                 showToast(`Ya tienes "${product.name}" en tu outfit.`);
             }
@@ -528,7 +613,7 @@
             playPop();
             cart = cart.filter(item => item.id !== id);
             updateCartUI();
-            renderProducts(); // Update button states
+            renderProducts(); 
         }
 
         function toggleCart(isOpen) {
@@ -542,7 +627,6 @@
         }
 
         function updateCartUI() {
-            // Badges
             const badge = document.getElementById('cart-badge');
             if (cart.length > 0) {
                 badge.innerText = cart.length;
@@ -554,11 +638,10 @@
             document.getElementById('cart-total-footer').innerText = cart.length;
             document.getElementById('checkout-btn').disabled = cart.length === 0;
 
-            // Progress
             const categoriesInCart = new Set(cart.map(item => item.category)).size;
             const progress = (categoriesInCart / 5) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('progress-text').innerText = `${categoriesInCart}/5 Categorías`;
+            document.getElementById('progress-text').innerText = `${categoriesInCart}/5 Completadas`;
             
             if (progress === 100) {
                 document.getElementById('progress-complete').classList.remove('hidden');
@@ -566,28 +649,28 @@
                 document.getElementById('progress-complete').classList.add('hidden');
             }
 
-            // Items List
             const listContainer = document.getElementById('cart-items');
             if (cart.length === 0) {
                 listContainer.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-center opacity-60 space-y-6 py-12">
-                        <div class="text-8xl drop-shadow-xl transform -rotate-12">🪞</div>
-                        <p class="text-2xl font-black text-gray-800">Tu armario está vacío.</p>
-                        <p class="text-base text-gray-600 max-w-[250px]">¿Qué actitud necesitas hoy para enfrentar el día?</p>
+                    <div class="h-full flex flex-col items-center justify-center text-center opacity-60 space-y-6 py-16">
+                        <i data-lucide="image" class="w-24 h-24 text-indigo-200"></i>
+                        <p class="text-2xl font-black font-display text-indigo-900">Tu interior está vacío.</p>
+                        <p class="text-sm text-gray-500 max-w-[200px] leading-relaxed">¿Qué actitud necesitas hoy para iluminar tu día?</p>
                     </div>
                 `;
             } else {
                 listContainer.innerHTML = cart.map(item => `
-                    <div class="bg-white p-4 rounded-[1.5rem] shadow-md border border-gray-100 flex gap-4 items-center group transform transition-transform hover:scale-105">
-                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr ${item.color} overflow-hidden shadow-inner flex-shrink-0 relative">
-                            <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover opacity-80 mix-blend-overlay group-hover:scale-110 transition-transform" />
+                    <div class="bg-white p-3 rounded-[2rem] shadow-sm hover:shadow-md border border-gray-100 flex gap-4 items-center group transition-all duration-300">
+                        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-inner flex-shrink-0 relative">
+                            <div class="absolute inset-0 bg-gradient-to-tr ${item.color} opacity-40 mix-blend-multiply z-10 group-hover:opacity-20 transition-opacity duration-300"></div>
+                            <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform z-0 relative" />
                         </div>
-                        <div class="flex-1">
-                            <span class="text-[10px] font-black uppercase text-pink-500 tracking-wider bg-pink-50 px-2 py-1 rounded-md">${item.category}</span>
-                            <h4 class="font-bold text-gray-900 mt-1 leading-tight">${item.name}</h4>
+                        <div class="flex-1 py-2">
+                            <span class="text-[9px] font-black uppercase text-pink-500 tracking-widest bg-pink-50 px-2.5 py-1 rounded-lg">${item.category}</span>
+                            <h4 class="font-bold font-display text-indigo-950 mt-1.5 leading-tight text-sm">${item.name}</h4>
                         </div>
-                        <button onclick="removeFromCart(${item.id})" class="p-3 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-colors shadow-sm" title="Quitar">
-                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        <button onclick="removeFromCart(${item.id})" class="mr-2 p-3 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-2xl transition-colors shadow-sm" title="Quitar">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
                 `).join('');
@@ -619,7 +702,6 @@
             const processing = document.getElementById('checkout-processing');
             const success = document.getElementById('checkout-success');
             
-            // Show Modal (State 1)
             modal.classList.remove('modal-hidden');
             modal.classList.add('modal-visible');
             contentContainer.classList.remove('scale-95');
@@ -628,17 +710,15 @@
             processing.classList.remove('hidden');
             success.classList.add('hidden');
 
-            // Simulate processing
             setTimeout(() => {
                 processing.classList.add('hidden');
                 success.classList.remove('hidden');
                 document.getElementById('checkout-count').innerText = cart.length;
                 lucide.createIcons();
-            }, 2500);
+            }, 3000);
         }
 
         function cerrarModalCheckout() {
-            // Solo cerrar si está en éxito, o permitir en cualquier momento
             const modal = document.getElementById('checkout-modal');
             const contentContainer = document.getElementById('checkout-content-container');
             
@@ -647,7 +727,6 @@
             contentContainer.classList.remove('scale-100');
             contentContainer.classList.add('scale-95');
             
-            // Vaciamos el carrito si cerró después de una compra exitosa
             if(!document.getElementById('checkout-success').classList.contains('hidden')) {
                  cart = [];
                  updateCartUI();
@@ -656,19 +735,17 @@
         }
 
         function handlePrint() {
-            // Cambiamos el texto del botón temporalmente para indicar carga
             const btn = document.querySelector('#checkout-success button');
             const originalText = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="animate-spin"></i> Generando PDF...`;
+            btn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i> Generando Recuerdo...`;
             lucide.createIcons();
 
-            // Build Receipt Content
             const receiptItems = document.getElementById('receipt-items');
             receiptItems.innerHTML = cart.map(item => `
-                <div class="pdf-item break-inside-avoid border-l-4 border-gray-400 pl-4 py-3 mb-4 bg-white">
-                    <h3 class="text-xl font-bold uppercase">${item.name}</h3>
-                    <p class="text-gray-700 my-1">${item.desc}</p>
-                    <p class="font-serif italic text-gray-900 font-semibold bg-gray-100 p-2 inline-block rounded">${item.verse}</p>
+                <div class="pdf-item break-inside-avoid border-l-4 border-pink-400 pl-5 py-3 mb-4 bg-gray-50 rounded-r-xl">
+                    <h3 class="text-xl font-bold font-display text-indigo-900">${item.name}</h3>
+                    <p class="text-gray-600 my-1 text-sm">${item.desc}</p>
+                    <p class="font-serif italic text-gray-800 font-semibold mt-2">"${item.verse.replace(/“|”/g,'')}"</p>
                 </div>
             `).join('');
             document.getElementById('receipt-count').innerText = cart.length;
@@ -676,38 +753,31 @@
             const mainApp = document.getElementById('main-app');
             const receiptView = document.getElementById('receipt-view');
             
-            // Ocultar toda la app principal para que no interfiera con el tamaño del canvas
             mainApp.style.display = 'none';
             
-            // Forzar vista de recibo a un ancho fijo y mostrarla
             receiptView.classList.remove('hidden');
             receiptView.style.display = 'block';
             receiptView.style.width = '800px';
             receiptView.style.margin = '0 auto';
 
-            // Scroll al inicio absoluto para que capture todo desde arriba
             window.scrollTo(0, 0);
 
-            // Damos 100ms para que el navegador "pinte" el HTML completo antes de tomar la foto
             setTimeout(() => {
-                // Configuración avanzada del PDF
                 const opt = {
                     margin:       [15, 10, 15, 10],
-                    filename:     'Mi_Outfit_del_Alma_UCN.pdf',
-                    image:        { type: 'jpeg', quality: 1 },
+                    filename:     'Outfit_del_Alma.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
                         scale: 2, 
                         useCORS: true, 
                         scrollY: 0,
-                        windowWidth: 800 // Fuerza el ancho del canvas internamente
+                        windowWidth: 800 
                     },
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
                     pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
-                // Generar y descargar el PDF automáticamente
                 html2pdf().set(opt).from(receiptView).save().then(() => {
-                    // Restaurar la vista original y limpiar todo después de la descarga
                     receiptView.style.display = '';
                     receiptView.style.width = '';
                     receiptView.style.margin = '';
@@ -722,7 +792,6 @@
                     renderProducts();
                 }).catch(err => {
                     console.error("Error al generar PDF:", err);
-                    // Si hay un error, restaurar pantalla de todos modos
                     receiptView.style.display = '';
                     receiptView.style.width = '';
                     receiptView.style.margin = '';
@@ -730,7 +799,7 @@
                     receiptView.classList.add('hidden');
                     mainApp.style.display = '';
                 });
-            }, 100);
+            }, 150);
         }
     </script>
 </body>
