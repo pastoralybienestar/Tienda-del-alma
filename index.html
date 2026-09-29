@@ -8,8 +8,8 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- HTML2PDF para descargar el PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- HTML2CANVAS para descargar la imagen -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;900&display=swap');
@@ -492,7 +492,7 @@
                     </div>
 
                     <button onclick="handlePrint()" class="btn-download" id="btn-download">
-                        <i data-lucide="download"></i> Descargar Recordatorio (PDF)
+                        <i data-lucide="download"></i> Descargar Recordatorio (Imagen)
                     </button>
                     <button onclick="cerrarModalCheckout()" class="btn-text-close">
                         Cerrar y volver a la tienda
@@ -826,33 +826,30 @@
 
             // Timeout para asegurar que el navegador redibujó el DOM antes del screenshot
             setTimeout(() => {
-                const opt = {
-                    margin:       [20, 20, 20, 20], // Márgenes más amplios y parejos en mm (Arriba, der, abajo, izq)
-                    filename:     'Outfit_del_Alma.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { 
-                        scale: 2, // Buena resolución
-                        useCORS: true, 
-                        scrollY: 0,
-                        scrollX: 0, // CRUCIAL: Fuerza a iniciar la captura exactamente en el borde izquierdo
-                        windowWidth: 800 // Ancho virtual para asegurar que el contenedor de 700px quepa holgado
-                    },
-                    jsPDF:        { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait' 
-                    },
-                    pagebreak:    { mode: 'avoid-all' } // Regla mágica para no dividir divs internos
-                };
+                html2canvas(receiptView, {
+                    scale: 2, // Buena resolución
+                    useCORS: true, // Permitir fuentes e imágenes externas si las hay
+                    backgroundColor: '#ffffff', // Fondo blanco garantizado
+                    scrollY: 0,
+                    scrollX: 0, // CRUCIAL: Fuerza a iniciar la captura exactamente en el borde izquierdo
+                    windowWidth: 800 // Ancho virtual holgado
+                }).then(canvas => {
+                    // Convertir el canvas a una URL de datos de imagen (PNG)
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    // Crear un enlace temporal para forzar la descarga
+                    const link = document.createElement('a');
+                    link.download = 'Outfit_del_Alma.png';
+                    link.href = imgData;
+                    link.click();
 
-                html2pdf().set(opt).from(receiptView).save().then(() => {
                     // Restauración tras imprimir
                     btn.innerHTML = originalText;
                     receiptView.classList.remove('active');
                     mainApp.style.display = 'block';
                     cerrarModalCheckout();
                 }).catch(err => {
-                    console.error("Error al generar PDF:", err);
+                    console.error("Error al generar imagen:", err);
                     btn.innerHTML = originalText;
                     receiptView.classList.remove('active');
                     mainApp.style.display = 'block';
