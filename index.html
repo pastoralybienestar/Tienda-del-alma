@@ -2,347 +2,534 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Outfit del Alma - Cibercolegio UCN</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons (Ligero y seguro) -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- HTML2PDF para forzar la descarga del archivo PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- Configuración personalizada de Tailwind -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    animation: {
-                        'blob': 'blob 10s infinite alternate',
-                        'spin-slow': 'spin 8s linear infinite',
-                        'bounce-slow': 'bounce 3s infinite',
-                        'pulse-glow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;900&display=swap');
         
-        body {
-            font-family: 'Inter', sans-serif;
+        :root {
+            --c-indigo-50: #eef2ff;
+            --c-indigo-100: #e0e7ff;
+            --c-indigo-600: #4f46e5;
+            --c-indigo-900: #312e81;
+            --c-indigo-950: #1e1b4b;
+            
+            --c-pink-50: #fdf2f8;
+            --c-pink-100: #fce7f3;
+            --c-pink-300: #f9a8d4;
+            --c-pink-400: #f472b6;
+            --c-pink-500: #ec4899;
+            --c-pink-600: #db2777;
+            
+            --c-purple-500: #a855f7;
+            --c-purple-600: #9333ea;
+            
+            --c-cyan-300: #67e8f9;
+            --c-cyan-500: #06b6d4;
+            
+            --c-gray-50: #f9fafb;
+            --c-gray-100: #f3f4f6;
+            --c-gray-200: #e5e7eb;
+            --c-gray-400: #9ca3af;
+            --c-gray-500: #6b7280;
+            --c-gray-600: #4b5563;
+            --c-gray-700: #374151;
+            --c-gray-800: #1f2937;
+            
+            --bg-body: #f4f6fb;
+            --font-sans: 'Inter', sans-serif;
+            --font-display: 'Outfit', sans-serif;
         }
 
-        h1, h2, h3, .font-display {
-            font-family: 'Outfit', sans-serif;
-        }
+        /* RESET & BASE */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--c-gray-800); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .font-display { font-family: var(--font-display); }
+        button { border: none; background: transparent; cursor: pointer; font-family: inherit; }
+        ul, ol { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
 
-        /* Ocultar scrollbar original en contenedores específicos */
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--c-gray-50); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--c-pink-500), var(--c-purple-500), var(--c-cyan-500)); border-radius: 10px; border: 2px solid var(--c-gray-50); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* 🎨 BARRA DE SCROLL CREATIVA GLOBAL */
-        ::-webkit-scrollbar {
-            width: 14px;
+
+        /* ANIMATIONS */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(20px, -30px) scale(1.05); }
+            66% { transform: translate(-10px, 15px) scale(0.95); }
+            100% { transform: translate(0px, 0px) scale(1); }
         }
-        ::-webkit-scrollbar-track {
-            background: #f8fafc;
-            border-left: 1px solid #e2e8f0;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
-            border-radius: 100vh;
-            border: 3px solid #f8fafc;
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #db2777 0%, #7c3aed 50%, #0891b2 100%);
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(0); }
         }
 
-        /* Clases utilitarias de animación y estado */
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
+        /* BACKGROUND EFFECTS (Optimized for mobile) */
+        .bg-orbs-container { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(60px); mix-blend-mode: multiply; opacity: 0.5; animation: blob 10s infinite alternate; }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(249, 168, 212, 0.5); }
+        .orb-2 { top: 20%; right: -10%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(165, 180, 252, 0.5); animation-delay: 2s; }
+        .orb-3 { bottom: -20%; left: 20%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(103, 232, 249, 0.5); animation-delay: 4s; }
+
+        @media (max-width: 768px) {
+            .orb { filter: blur(40px); opacity: 0.4; }
+        }
+
+        /* LAYOUT & UTILITIES */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        @media (min-width: 640px) { .container { padding: 0 1.5rem; } }
+        @media (min-width: 1024px) { .container { padding: 0 2rem; } }
+        .text-center { text-align: center; }
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
         
-        .cart-open .cart-sidebar { transform: translateX(0); }
+        /* NAVBAR */
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 40; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 6rem; }
+        .logo-group { display: flex; align-items: center; gap: 1rem; cursor: pointer; }
+        .logo-icon-wrapper { position: relative; width: 3.5rem; height: 3.5rem; background: linear-gradient(to top right, var(--c-indigo-600), var(--c-purple-500), var(--c-pink-500)); border-radius: 1.25rem; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 20px rgba(236,72,153,0.3); transition: transform 0.5s; }
+        .logo-group:hover .logo-icon-wrapper { transform: rotate(15deg) scale(1.05); }
+        .logo-title { font-size: 1.5rem; font-weight: 900; background: linear-gradient(to right, var(--c-indigo-900), var(--c-purple-600)); -webkit-background-clip: text; color: transparent; letter-spacing: -0.02em; }
+        @media (min-width: 640px) { .logo-title { font-size: 1.875rem; } }
+        .logo-subtitle { font-size: 0.65rem; font-weight: 900; color: var(--c-pink-500); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 0.25rem; }
+        
+        .cart-btn { position: relative; padding: 1rem; background: rgba(255, 255, 255, 0.8); border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); color: var(--c-indigo-900); border: 1px solid white; transition: all 0.3s; }
+        .cart-btn:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.1); background: var(--c-pink-50); }
+        .cart-badge { position: absolute; top: -0.5rem; right: -0.5rem; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 900; color: white; background: linear-gradient(to right, var(--c-pink-500), var(--c-pink-600)); border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: bounce-slow 2s infinite; }
+
+        .category-nav-bar { width: 100%; border-top: 1px solid var(--c-gray-100); background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); }
+        .category-nav-list { display: flex; gap: 1rem; overflow-x: auto; padding: 0.75rem 0; scroll-snap-type: x mandatory; }
+        .cat-nav-btn { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; padding: 0.5rem 1.25rem; border-radius: 9999px; font-weight: 700; color: var(--c-gray-500); border: 1px solid transparent; transition: all 0.3s; scroll-snap-align: center; }
+        .cat-nav-btn:hover { background: white; color: var(--c-indigo-600); box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-color: var(--c-gray-200); }
+        .cat-nav-emoji { font-size: 1.25rem; }
+
+        /* MAIN APP AREA */
+        .main-content { position: relative; z-index: 10; padding-top: 11rem; padding-bottom: 4rem; }
+        
+        /* HERO SECTION */
+        .hero { position: relative; border-radius: 2.5rem; background: var(--c-indigo-950); margin-bottom: 4rem; overflow: hidden; box-shadow: 0 30px 60px -15px rgba(79,70,229,0.4); transition: transform 0.5s; padding: 4rem 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .hero:hover { transform: scale(1.005); }
+        .hero-bg { position: absolute; inset: 0; background: linear-gradient(to bottom right, #312e81, #581c87, #831843); z-index: 0; }
+        .hero-pattern { position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.3; z-index: 1; }
+        .hero-glow-1, .hero-glow-2 { position: absolute; border-radius: 50%; mix-blend-mode: screen; opacity: 0.5; filter: blur(60px); animation: float 6s ease-in-out infinite; z-index: 2; }
+        .hero-glow-1 { top: -5rem; right: -5rem; width: 20rem; height: 20rem; background: linear-gradient(to bottom right, var(--c-pink-500), #fb923c); }
+        .hero-glow-2 { bottom: -5rem; left: -5rem; width: 20rem; height: 20rem; background: linear-gradient(to top right, var(--c-cyan-500), #3b82f6); animation-delay: 2s; }
+        
+        .hero-content { position: relative; z-index: 10; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.5rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: var(--c-pink-300); font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px); margin-bottom: 2rem; box-shadow: 0 0 20px rgba(236,72,153,0.3); }
+        .hero-title { font-size: 2.5rem; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 1.5rem; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        @media (min-width: 768px) { .hero-title { font-size: 4.5rem; } }
+        .hero-title-highlight { background: linear-gradient(to right, #f472b6, #c084fc, #22d3ee); -webkit-background-clip: text; color: transparent; animation: pulse-glow 3s infinite alternate; }
+        .hero-desc { font-size: 1.125rem; color: rgba(224, 231, 255, 0.9); margin-bottom: 2.5rem; line-height: 1.6; font-weight: 500; }
+        @media (min-width: 768px) { .hero-desc { font-size: 1.5rem; } }
+        .hero-verse-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); padding: 1.25rem 2rem; border-radius: 1.5rem; display: flex; align-items: center; gap: 1.25rem; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transition: background 0.3s; }
+        .hero-verse-box:hover { background: rgba(255,255,255,0.15); }
+        .hero-verse-icon { background: rgba(255,255,255,0.2); padding: 0.75rem; border-radius: 1rem; color: #fde047; }
+        .hero-verse-text { font-size: 1.125rem; font-family: serif; font-style: italic; color: white; }
+        .hero-verse-ref { font-size: 0.75rem; font-family: var(--font-sans); font-style: normal; color: var(--c-pink-300); font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; }
+
+        .emoji-float { position: absolute; font-size: 3rem; text-shadow: 0 10px 20px rgba(0,0,0,0.4); animation: float 5s ease-in-out infinite; cursor: pointer; transition: transform 0.3s; z-index: 5; }
+        .emoji-float:hover { transform: scale(1.3) !important; }
+        .emoji-1 { top: 10%; left: 5%; transform: rotate(-15deg); }
+        .emoji-2 { bottom: 10%; right: 5%; transform: rotate(15deg); animation-delay: 1.5s; }
+        @media (min-width: 768px) { .emoji-float { font-size: 5rem; } .emoji-1 { top: 15%; left: 10%; } .emoji-2 { bottom: 15%; right: 10%; } }
+
+        /* FILTERS */
+        .filters-bar { display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1.5rem; background: rgba(255,255,255,0.6); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 2.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid white; margin-bottom: 4rem; }
+        @media (min-width: 768px) { .filters-bar { flex-direction: row; padding: 1.25rem 2rem; } }
+        .filters-title { font-size: 1.25rem; font-weight: 900; color: var(--c-indigo-900); display: flex; align-items: center; gap: 0.75rem; }
+        .filters-icon { background: var(--c-pink-100); color: var(--c-pink-600); padding: 0.5rem; border-radius: 0.75rem; display: flex; }
+        .filters-list { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+        .filter-btn { padding: 0.75rem 1.5rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 900; transition: all 0.3s; background: white; color: var(--c-gray-500); border: 1px solid var(--c-gray-200); }
+        .filter-btn:hover { background: var(--c-gray-50); }
+        .filter-btn.active { background: var(--c-indigo-950); color: white; border-color: var(--c-indigo-950); box-shadow: 0 10px 20px rgba(30,27,75,0.3); transform: scale(1.05); }
+
+        /* PRODUCT SECTIONS */
+        .category-section { scroll-margin-top: 12rem; margin-bottom: 6rem; }
+        .category-header { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; background: rgba(255,255,255,0.5); padding: 2rem; border-radius: 2.5rem; border: 1px solid white; backdrop-filter: blur(12px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
+        @media (min-width: 768px) { .category-header { flex-direction: row; } }
+        .category-bg-decor { position: absolute; right: 0; top: 0; width: 16rem; height: 16rem; background: linear-gradient(to bottom right, var(--c-pink-100), transparent); border-radius: 50%; mix-blend-mode: multiply; opacity: 0.5; transform: translate(50%, -50%); pointer-events: none; }
+        .category-emoji { font-size: 3.5rem; background: white; padding: 1.25rem; border-radius: 1.5rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: transform 0.5s; position: relative; z-index: 2; }
+        .category-header:hover .category-emoji { transform: scale(1.1) rotate(10deg); }
+        .category-info { text-align: center; position: relative; z-index: 2; }
+        @media (min-width: 768px) { .category-info { text-align: left; } }
+        .category-title { font-size: 2.25rem; font-weight: 900; color: var(--c-indigo-950); letter-spacing: -0.02em; }
+        .category-desc { font-size: 1.125rem; font-weight: 700; color: var(--c-pink-500); margin-top: 0.5rem; }
+
+        .products-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1280px) { .products-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        /* PRODUCT CARDS */
+        .card { background: white; border-radius: 2.5rem; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: all 0.4s ease; display: flex; flex-direction: column; border: 1px solid var(--c-gray-100); height: 100%; position: relative; z-index: 10; }
+        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
+        .card-img-container { position: relative; height: 16rem; overflow: hidden; background: var(--c-gray-100); }
+        .card-img-overlay { position: absolute; inset: 0; opacity: 0.4; mix-blend-mode: multiply; transition: opacity 0.5s; z-index: 1; }
+        .card:hover .card-img-overlay { opacity: 0.2; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; position: relative; z-index: 0; }
+        .card:hover .card-img { transform: scale(1.1); }
+        .card-gender-badge { position: absolute; top: 1.25rem; left: 1.25rem; z-index: 2; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); padding: 0.5rem 1rem; border-radius: 1rem; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: var(--c-indigo-900); display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .badge-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; }
+        
+        .card-body { padding: 2rem; display: flex; flex-direction: column; flex-grow: 1; position: relative; z-index: 3; background: white; }
+        .card-title { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-950); margin-bottom: 0.75rem; line-height: 1.2; transition: color 0.3s; }
+        .card:hover .card-title { color: var(--c-pink-600); }
+        .card-desc { font-size: 0.875rem; color: var(--c-gray-500); font-weight: 500; margin-bottom: 1.5rem; line-height: 1.6; flex-grow: 1; }
+        .card-verse-box { background: var(--c-gray-50); padding: 1.25rem; border-radius: 1.5rem; border: 1px solid var(--c-gray-100); position: relative; overflow: hidden; margin-bottom: 1.5rem; transition: background 0.3s; }
+        .card:hover .card-verse-box { background: var(--c-indigo-50); border-color: var(--c-indigo-100); }
+        .card-verse-border { position: absolute; left: 0; top: 0; width: 0.375rem; height: 100%; }
+        .card-verse-text { font-size: 0.875rem; font-family: serif; font-style: italic; color: var(--c-gray-700); font-weight: 500; padding-left: 0.5rem; line-height: 1.5; }
+        
+        .btn-action { width: 100%; padding: 1rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s ease; }
+        
+        .btn-add { background: var(--c-indigo-950); color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .btn-add::after { content: ''; position: absolute; top: 0; left: -150%; width: 70%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); transition: all 0.6s ease; z-index: 10; }
+        .btn-add:hover { background: linear-gradient(to right, var(--c-pink-500), var(--c-purple-600)); box-shadow: 0 15px 30px rgba(236,72,153,0.3); transform: translateY(-3px); }
+        .btn-add:hover::after { left: 200%; }
+        
+        .btn-equipped { background: #ecfdf5; color: #059669; border: 2px solid #a7f3d0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+
+        /* CART SIDEBAR */
+        .cart-overlay { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+        .cart-backdrop { position: absolute; inset: 0; background: rgba(30,27,75,0.4); backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
+        .cart-panel { position: absolute; right: 0; top: 0; width: 100%; max-width: 28rem; height: 100%; background: var(--c-gray-50); box-shadow: -20px 0 50px rgba(0,0,0,0.2); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-top-left-radius: 2.5rem; border-bottom-left-radius: 2.5rem; pointer-events: auto; }
+        
         .cart-open .cart-backdrop { opacity: 1; pointer-events: auto; }
-        
-        .toast-visible { transform: translate(-50%, 0); opacity: 1; }
-        .toast-hidden { transform: translate(-50%, 100px); opacity: 0; }
-        
-        .modal-visible { opacity: 1; pointer-events: auto; transform: scale(1); }
-        .modal-hidden { opacity: 0; pointer-events: none; transform: scale(0.95); }
-        
-        .pdf-item {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-        
-        /* Efecto Espejo Elegante para Botones */
-        .btn-mirror {
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-mirror::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 70%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            transition: all 0.6s ease;
-            z-index: 10;
-        }
-        .btn-mirror:hover::after {
-            left: 200%;
-            transition: all 0.6s ease;
-        }
+        .cart-open .cart-panel { transform: translateX(0); }
 
-        /* Patrón de fondo creativo tipo ruido/cristal */
-        .glass-pattern {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
+        .cart-header { padding: 2rem; background: white; border-bottom: 1px solid var(--c-gray-100); border-top-left-radius: 2.5rem; z-index: 10; }
+        .cart-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .cart-title { font-size: 1.875rem; font-weight: 900; color: var(--c-indigo-950); display: flex; align-items: center; gap: 0.75rem; }
+        .cart-icon-bg { background: var(--c-pink-100); padding: 0.75rem; border-radius: 1rem; color: var(--c-pink-500); }
+        .btn-close { padding: 0.75rem; background: var(--c-gray-50); color: var(--c-gray-500); border-radius: 1rem; transition: background 0.3s; }
+        .btn-close:hover { background: var(--c-gray-200); color: var(--c-gray-800); }
+        
+        .progress-box { background: var(--c-indigo-50); padding: 1.25rem; border-radius: 1.5rem; border: 1px solid var(--c-indigo-100); }
+        .progress-labels { display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .progress-track { width: 100%; height: 1rem; background: var(--c-indigo-100); border-radius: 9999px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .progress-fill { height: 100%; background: linear-gradient(to right, var(--c-pink-400), var(--c-purple-400), var(--c-indigo-500)); transition: width 1s ease-in-out; position: relative; }
+        .progress-pattern { position: absolute; inset: 0; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBsNDAtNDBIMHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4yKSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+'); opacity: 0.5; }
+        .progress-success { font-size: 0.875rem; color: var(--c-indigo-600); font-weight: 700; text-align: center; margin-top: 0.75rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+
+        .cart-items-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
+        .empty-cart { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.6; padding: 2rem; gap: 1.5rem; }
+        .empty-cart svg { width: 6rem; height: 6rem; color: var(--c-indigo-200); }
+        .empty-cart h3 { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-900); }
+        .empty-cart p { font-size: 0.875rem; color: var(--c-gray-500); max-width: 15rem; line-height: 1.5; }
+
+        .cart-item { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.75rem; border-radius: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid var(--c-gray-100); transition: box-shadow 0.3s; }
+        .cart-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .cart-item-img-box { width: 5rem; height: 5rem; border-radius: 1rem; overflow: hidden; position: relative; flex-shrink: 0; }
+        .cart-item-overlay { position: absolute; inset: 0; opacity: 0.4; mix-blend-mode: multiply; z-index: 1; }
+        .cart-item-img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 0; }
+        .cart-item-info { flex: 1; }
+        .cart-item-cat { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; color: var(--c-pink-500); letter-spacing: 0.1em; background: var(--c-pink-50); padding: 0.25rem 0.5rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 0.25rem; }
+        .cart-item-title { font-size: 0.875rem; font-weight: 700; color: var(--c-indigo-950); line-height: 1.2; }
+        .btn-remove { padding: 0.75rem; background: #fef2f2; color: #f87171; border-radius: 1rem; transition: all 0.3s; margin-right: 0.5rem; }
+        .btn-remove:hover { background: #ef4444; color: white; }
+
+        .cart-footer { padding: 2rem; background: white; border-top: 1px solid var(--c-gray-100); border-bottom-left-radius: 2.5rem; z-index: 10; box-shadow: 0 -10px 30px rgba(0,0,0,0.03); }
+        .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .cart-total-label { color: var(--c-gray-500); font-weight: 700; font-size: 1.125rem; }
+        .cart-total-val { font-size: 2.25rem; font-weight: 900; color: var(--c-indigo-900); }
+        .btn-checkout { width: 100%; padding: 1.25rem; border-radius: 1.5rem; font-size: 1.25rem; font-weight: 900; background: linear-gradient(to right, var(--c-indigo-600), var(--c-purple-600)); color: white; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s; box-shadow: 0 10px 20px rgba(79,70,229,0.2); }
+        .btn-checkout:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(79,70,229,0.3); }
+        .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* TOAST */
+        .toast { position: fixed; bottom: 2.5rem; left: 50%; display: flex; align-items: center; gap: 1rem; background: rgba(30,27,75,0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 1rem 2rem; border-radius: 9999px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-weight: 700; z-index: 100; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .toast.visible { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+        .toast.hidden-state { transform: translate(-50%, 100px); opacity: 0; pointer-events: none; }
+        .toast-icon { background: var(--c-pink-500); border-radius: 50%; padding: 0.375rem; box-shadow: 0 0 10px rgba(236,72,153,0.5); display: flex; }
+
+        /* MODAL */
+        .modal-wrap { position: fixed; inset: 0; z-index: 60; display: flex; justify-content: center; align-items: center; padding: 1rem; transition: all 0.4s; pointer-events: none; opacity: 0; }
+        .modal-wrap.visible { opacity: 1; pointer-events: auto; }
+        .modal-bg { position: absolute; inset: 0; background: rgba(30,27,75,0.6); backdrop-filter: blur(12px); }
+        .modal-content { position: relative; background: white; border-radius: 2.5rem; padding: 2.5rem; max-width: 36rem; width: 100%; text-align: center; box-shadow: 0 0 60px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.4s; overflow: hidden; z-index: 10; }
+        @media (min-width: 768px) { .modal-content { padding: 3.5rem; } }
+        .modal-wrap.visible .modal-content { transform: scale(1); }
+        .modal-decor { position: absolute; top: -5rem; right: -5rem; width: 16rem; height: 16rem; background: var(--c-pink-100); border-radius: 50%; filter: blur(40px); mix-blend-mode: multiply; opacity: 0.7; z-index: 0; }
+        
+        .modal-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+        
+        /* Loading Spinner */
+        .spinner-box { position: relative; width: 8rem; height: 8rem; display: flex; align-items: center; justify-content: center; }
+        .spinner-ring { position: absolute; inset: 0; border: 8px solid var(--c-gray-100); border-top-color: var(--c-pink-500); border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner-icon { color: var(--c-pink-500); animation: pulse-glow 2s infinite; }
+        
+        /* Success check */
+        .success-box { width: 8rem; height: 8rem; background: linear-gradient(to top right, #34d399, #10b981); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(16,185,129,0.3); animation: bounce-slow 3s infinite; color: white; }
+        
+        .modal-title { font-size: 2.25rem; font-weight: 900; color: var(--c-indigo-950); margin-bottom: 0.5rem; }
+        .modal-desc { font-size: 1.125rem; color: var(--c-gray-500); font-weight: 500; }
+        
+        .receipt-summary { width: 100%; background: var(--c-gray-50); padding: 1.5rem; border-radius: 1.5rem; border: 1px solid var(--c-gray-100); position: relative; overflow: hidden; margin: 1rem 0; text-align: left; }
+        .receipt-bar { position: absolute; left: 0; top: 0; width: 0.5rem; height: 100%; background: linear-gradient(to bottom, var(--c-pink-400), var(--c-indigo-500)); }
+        .receipt-label { font-size: 0.75rem; font-weight: 900; color: var(--c-gray-400); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block; }
+        .receipt-val { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-900); }
+        .receipt-pay { font-size: 1rem; color: var(--c-gray-500); margin-top: 0.5rem; }
+        .pay-badge { font-weight: 900; color: var(--c-pink-500); background: var(--c-pink-50); padding: 0.25rem 0.75rem; border-radius: 9999px; margin-left: 0.5rem; }
+
+        .btn-download { width: 100%; padding: 1.25rem; border-radius: 1.5rem; font-size: 1.125rem; font-weight: 900; background: var(--c-indigo-950); color: white; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s; }
+        .btn-download:hover { background: var(--c-indigo-900); box-shadow: 0 15px 30px rgba(30,27,75,0.4); transform: translateY(-2px); }
+        .btn-text-close { padding: 0.75rem; color: var(--c-gray-400); font-weight: 700; transition: color 0.3s; width: 100%; margin-top: 0.5rem; }
+        .btn-text-close:hover { color: var(--c-gray-800); }
+
+        /* PRINT RECEIPT VIEW */
+        .receipt-view-container { display: none; background: white; padding: 2.5rem; max-width: 800px; margin: 0 auto; border: 8px solid var(--c-indigo-900); border-radius: 1rem; position: relative; z-index: 1000; }
+        .receipt-view-container.active { display: block; }
+        .receipt-decor-top { position: absolute; top: 0; right: 0; width: 8rem; height: 8rem; background: var(--c-pink-100); border-bottom-left-radius: 100%; z-index: 0; opacity: 0.5; }
+        .receipt-decor-bottom { position: absolute; bottom: 0; left: 0; width: 8rem; height: 8rem; background: var(--c-cyan-100); border-top-right-radius: 100%; z-index: 0; opacity: 0.5; }
+        
+        .receipt-header-print { text-align: center; border-bottom: 4px solid var(--c-indigo-900); padding-bottom: 1.5rem; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+        .receipt-title-print { font-size: 3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-indigo-900); font-family: var(--font-display); }
+        .receipt-sub-print { font-size: 1.5rem; font-family: serif; font-style: italic; color: var(--c-pink-600); margin-top: 0.5rem; }
+        .receipt-date-print { color: var(--c-gray-500); font-weight: 500; margin-top: 0.5rem; }
+        .receipt-msg { font-size: 1.25rem; text-align: center; font-weight: 700; color: var(--c-gray-700); margin-bottom: 2rem; position: relative; z-index: 1; }
+        
+        .pdf-item { page-break-inside: avoid; break-inside: avoid; border-left: 4px solid var(--c-pink-400); padding-left: 1.25rem; padding-top: 0.75rem; padding-bottom: 0.75rem; margin-bottom: 1rem; background: var(--c-gray-50); border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem; position: relative; z-index: 1; }
+        .pdf-item-title { font-size: 1.25rem; font-weight: 900; color: var(--c-indigo-900); font-family: var(--font-display); }
+        .pdf-item-desc { color: var(--c-gray-600); font-size: 0.875rem; margin-top: 0.25rem; margin-bottom: 0.25rem; }
+        .pdf-item-verse { font-family: serif; font-style: italic; color: var(--c-gray-800); font-weight: 600; margin-top: 0.5rem; }
+        
+        .receipt-footer-print { margin-top: 3rem; text-align: center; border-top: 2px dashed var(--c-gray-400); padding-top: 2rem; position: relative; z-index: 1; }
+        .receipt-total-items { font-weight: 900; font-size: 1.5rem; color: var(--c-indigo-900); }
+        .receipt-total-pay { font-weight: 700; font-size: 1.125rem; margin-top: 0.5rem; }
+        .receipt-pay-hl { color: var(--c-pink-500); }
+        .receipt-pay-method { color: var(--c-gray-600); margin-top: 0.25rem; }
+        .receipt-quote { margin-top: 2.5rem; font-family: serif; font-style: italic; font-size: 1.25rem; color: var(--c-gray-500); }
     </style>
 </head>
-<body class="bg-[#f4f6fb] overflow-x-hidden text-gray-800">
+<body>
 
     <!-- RECIBO PARA IMPRIMIR (Oculto por defecto) -->
-    <div id="receipt-view" class="hidden bg-white text-black p-10 mx-auto w-full max-w-[800px] border-8 border-indigo-900 rounded-xl relative">
-        <div class="absolute top-0 right-0 w-32 h-32 bg-pink-100 rounded-bl-full -z-10 opacity-50"></div>
-        <div class="absolute bottom-0 left-0 w-32 h-32 bg-cyan-100 rounded-tr-full -z-10 opacity-50"></div>
+    <div id="receipt-view" class="receipt-view-container">
+        <div class="receipt-decor-top"></div>
+        <div class="receipt-decor-bottom"></div>
         
-        <div class="text-center border-b-4 border-indigo-900 pb-6 mb-6">
-            <h1 class="text-5xl font-black uppercase tracking-widest font-display text-indigo-900">Cibercolegio UCN</h1>
-            <h2 class="text-2xl mt-2 font-serif italic text-pink-600">Recibo: Outfit del Alma</h2>
-            <p class="mt-2 text-gray-500 font-medium" id="receipt-date"></p>
+        <div class="receipt-header-print">
+            <h1 class="receipt-title-print">Cibercolegio UCN</h1>
+            <h2 class="receipt-sub-print">Recibo: Outfit del Alma</h2>
+            <p class="receipt-date-print" id="receipt-date"></p>
         </div>
-        <p class="text-xl mb-8 text-center font-bold text-gray-700">¡Felicidades! Has decidido revestirte de las mejores actitudes hoy.</p>
-        <div id="receipt-items" class="space-y-4">
+        <p class="receipt-msg">¡Felicidades! Has decidido revestirte de las mejores actitudes hoy.</p>
+        <div id="receipt-items">
             <!-- Items del recibo inyectados aquí -->
         </div>
-        <div class="mt-12 text-center border-t-2 border-dashed border-gray-400 pt-8">
-            <p class="font-black text-2xl text-indigo-900">Total de prendas: <span id="receipt-count">0</span></p>
-            <p class="font-bold text-lg mt-2">Total a pagar: <span class="text-pink-500">0 Monedas</span></p>
-            <p class="text-gray-600 mt-1">Pagado con: Voluntad, Esfuerzo y Fe</p>
-            <p class="mt-10 font-serif italic text-xl text-gray-500">📖 “Revístanse del Señor Jesucristo.” (Romanos 13,14)</p>
+        <div class="receipt-footer-print">
+            <p class="receipt-total-items">Total de prendas: <span id="receipt-count">0</span></p>
+            <p class="receipt-total-pay">Total a pagar: <span class="receipt-pay-hl">0 Monedas</span></p>
+            <p class="receipt-pay-method">Pagado con: Voluntad, Esfuerzo y Fe</p>
+            <p class="receipt-quote">📖 “Revístanse del Señor Jesucristo.” (Romanos 13,14)</p>
         </div>
     </div>
 
     <!-- MAIN APP CONTAINER -->
-    <div id="main-app" class="relative min-h-screen print:hidden selection:bg-pink-300 selection:text-pink-900">
+    <div id="main-app" class="main-app-container">
         
         <!-- Background Orbs Effect -->
-        <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-pink-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob"></div>
-            <div class="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-indigo-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000"></div>
-            <div class="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-cyan-300/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-4000"></div>
+        <div class="bg-orbs-container">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
         </div>
 
         <!-- NAVBAR -->
-        <nav class="fixed top-0 w-full bg-white/70 backdrop-blur-2xl border-b border-white/50 z-40 shadow-sm transition-all duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-24">
-                    <div class="flex items-center gap-4 group cursor-pointer" onclick="window.scrollTo(0,0)">
-                        <div class="relative w-14 h-14 bg-gradient-to-tr from-indigo-600 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_20px_rgba(236,72,153,0.3)] transform group-hover:rotate-[20deg] transition-all duration-500">
-                            <i data-lucide="sparkles" class="w-7 h-7 animate-pulse-glow"></i>
-                            <div class="absolute inset-0 bg-white/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        </div>
-                        <div>
-                            <h1 class="text-3xl font-black font-display bg-clip-text text-transparent bg-gradient-to-r from-indigo-800 to-purple-600 tracking-tight">
-                                Cibercolegio <span class="font-light text-pink-500">UCN</span>
-                            </h1>
-                            <p class="text-xs font-black text-pink-500 uppercase tracking-[0.3em] mt-1 opacity-80">Tienda del Alma</p>
-                        </div>
+        <nav class="navbar">
+            <div class="container nav-inner">
+                <div class="logo-group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <div class="logo-icon-wrapper">
+                        <i data-lucide="sparkles" class="logo-icon" style="animation: pulse-glow 2s infinite"></i>
                     </div>
-                    
-                    <button onclick="toggleCart(true)" class="relative p-4 bg-white/80 backdrop-blur rounded-2xl shadow-[0_5px_20px_rgba(0,0,0,0.06)] text-indigo-900 hover:scale-110 hover:shadow-xl hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 transition-all duration-300 border border-white">
-                        <i data-lucide="shopping-bag" class="w-7 h-7"></i>
-                        <span id="cart-badge" class="hidden absolute -top-2 -right-2 w-8 h-8 flex items-center justify-center text-sm font-black text-white bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-lg animate-bounce border-2 border-white">0</span>
-                    </button>
+                    <div>
+                        <h1 class="logo-title">Cibercolegio <span style="font-weight: 300; color: var(--c-pink-500);">UCN</span></h1>
+                        <p class="logo-subtitle">Tienda del Alma</p>
+                    </div>
                 </div>
+                
+                <button onclick="toggleCart(true)" class="cart-btn">
+                    <i data-lucide="shopping-bag"></i>
+                    <span id="cart-badge" class="cart-badge hidden">0</span>
+                </button>
             </div>
 
             <!-- STICKY CATEGORY NAV -->
-            <div class="w-full border-t border-gray-100 bg-white/40 backdrop-blur-md">
-                <div id="category-nav" class="max-w-7xl mx-auto px-4 py-3 flex gap-4 overflow-x-auto hide-scrollbar snap-x">
-                    <!-- Nav items injected here -->
+            <div class="category-nav-bar">
+                <div class="container">
+                    <div id="category-nav" class="category-nav-list hide-scrollbar">
+                        <!-- Nav items injected here -->
+                    </div>
                 </div>
             </div>
         </nav>
 
-        <div class="relative z-10 pt-44 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="main-content container">
             
             <!-- HERO SECTION -->
-            <div class="relative rounded-[3rem] overflow-hidden bg-indigo-950 shadow-[0_30px_60px_-15px_rgba(79,70,229,0.4)] mb-16 transform hover:scale-[1.005] transition-all duration-700">
-                <!-- Abstract creative backgrounds instead of photos -->
-                <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
-                <div class="absolute top-0 left-0 w-full h-full glass-pattern opacity-30"></div>
-                
-                <!-- Floating geometric shapes -->
-                <div class="absolute -top-20 -right-20 w-80 h-80 bg-gradient-to-br from-pink-500 to-orange-400 rounded-full mix-blend-screen opacity-50 blur-3xl animate-float"></div>
-                <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-gradient-to-tr from-cyan-500 to-blue-500 rounded-full mix-blend-screen opacity-50 blur-3xl animate-float" style="animation-delay: 2s;"></div>
+            <div class="hero">
+                <div class="hero-bg"></div>
+                <div class="hero-pattern"></div>
+                <div class="hero-glow-1"></div>
+                <div class="hero-glow-2"></div>
 
-                <div class="relative p-12 md:p-24 text-center flex flex-col items-center justify-center">
-                    <span class="inline-flex items-center gap-2 py-2 px-6 rounded-full bg-white/10 text-pink-300 text-sm font-black tracking-[0.2em] uppercase mb-8 backdrop-blur-md border border-white/20 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-                        <i data-lucide="stars" class="w-4 h-4"></i> Colección Exclusiva
+                <div class="hero-content">
+                    <span class="hero-badge">
+                        <i data-lucide="stars" style="width: 1rem; height: 1rem;"></i> Colección Exclusiva
                     </span>
-                    <h2 class="text-5xl md:text-8xl font-black font-display text-white mb-6 leading-tight drop-shadow-2xl">
+                    <h2 class="hero-title font-display">
                         Crea tu <br />
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 animate-pulse-glow">Outfit del Alma</span>
+                        <span class="hero-title-highlight">Outfit del Alma</span>
                     </h2>
-                    <p class="text-xl md:text-2xl text-indigo-100/90 mb-10 max-w-3xl font-medium drop-shadow-md leading-relaxed">
+                    <p class="hero-desc">
                         Lo que te pongas hoy se notará en tus palabras y decisiones. Construye un atuendo a la medida de tu espíritu.
                     </p>
                     
-                    <div class="bg-white/10 backdrop-blur-xl border border-white/20 px-8 py-5 rounded-3xl text-left flex items-center gap-5 shadow-2xl hover:bg-white/20 transition-colors cursor-default">
-                        <div class="bg-white/20 p-3 rounded-2xl">
-                            <i data-lucide="book-open" class="text-yellow-300 w-8 h-8 drop-shadow-lg"></i>
+                    <div class="hero-verse-box cursor-default">
+                        <div class="hero-verse-icon">
+                            <i data-lucide="book-open" style="width: 2rem; height: 2rem;"></i>
                         </div>
-                        <p class="text-xl font-serif italic text-white drop-shadow-md">
-                            “Revístanse del Señor Jesucristo.” <br/>
-                            <span class="text-sm font-sans not-italic text-pink-300 font-bold uppercase tracking-wider">(Romanos 13,14)</span>
-                        </p>
+                        <div>
+                            <p class="hero-verse-text">“Revístanse del Señor Jesucristo.”</p>
+                            <span class="hero-verse-ref">(Romanos 13,14)</span>
+                        </div>
                     </div>
-
-                    <!-- Emojis flotantes decorativos -->
-                    <div class="absolute top-16 left-16 text-6xl md:text-8xl drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transform -rotate-12 animate-float cursor-pointer hover:scale-125 transition-transform duration-300">💖</div>
-                    <div class="absolute bottom-16 right-16 text-6xl md:text-8xl drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transform rotate-12 animate-float cursor-pointer hover:scale-125 transition-transform duration-300" style="animation-delay: 1.5s;">✨</div>
                 </div>
+
+                <!-- Floating Emojis -->
+                <div class="emoji-float emoji-1">💖</div>
+                <div class="emoji-float emoji-2">✨</div>
             </div>
 
-            <!-- FILTROS GLOBALES -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-white/60 backdrop-blur-xl p-5 rounded-[2.5rem] shadow-xl border border-white mb-16">
-                <h3 class="text-xl font-black text-indigo-900 flex items-center gap-3 pl-4">
-                    <div class="bg-pink-100 p-2 rounded-xl text-pink-600"><i data-lucide="sparkles"></i></div>
+            <!-- FILTERS -->
+            <div class="filters-bar">
+                <h3 class="filters-title font-display">
+                    <div class="filters-icon"><i data-lucide="sparkles" style="width: 1.25rem; height: 1.25rem;"></i></div>
                     Filtra tu estilo
                 </h3>
-                <div id="filters-container" class="flex flex-wrap gap-3 justify-center pr-2">
+                <div id="filters-container" class="filters-list">
                     <!-- Filters injected here -->
                 </div>
             </div>
 
-            <!-- SECCIONES DE PRODUCTOS -->
-            <div id="products-container" class="space-y-24">
+            <!-- PRODUCT SECTIONS -->
+            <div id="products-container">
                 <!-- Products injected here -->
             </div>
         </div>
 
-        <!-- SIDEBAR DEL CARRITO -->
-        <div id="cart-container" class="fixed inset-0 z-50 pointer-events-none cart-open-target">
-            <!-- Backdrop -->
-            <div class="cart-backdrop absolute inset-0 bg-indigo-950/40 backdrop-blur-md opacity-0 transition-opacity duration-500 pointer-events-none" onclick="toggleCart(false)"></div>
+        <!-- CART SIDEBAR -->
+        <div id="cart-container" class="cart-overlay">
+            <div class="cart-backdrop" onclick="toggleCart(false)"></div>
             
-            <!-- Sidebar -->
-            <div class="cart-sidebar absolute right-0 top-0 h-full w-full max-w-md bg-[#f8fafc] shadow-[-20px_0_50px_rgba(0,0,0,0.2)] flex flex-col transform translate-x-full transition-transform duration-500 pointer-events-auto overflow-hidden rounded-l-[2.5rem]">
-                
-                <!-- Header -->
-                <div class="relative p-8 bg-white border-b border-gray-100 z-10">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-3xl font-black font-display text-indigo-950 flex items-center gap-3">
-                            <div class="bg-pink-100 p-3 rounded-2xl text-pink-500">
-                                <i data-lucide="shopping-bag" class="w-6 h-6"></i>
-                            </div>
+            <div class="cart-panel">
+                <div class="cart-header">
+                    <div class="cart-header-top">
+                        <h2 class="cart-title font-display">
+                            <div class="cart-icon-bg"><i data-lucide="shopping-bag" style="width: 1.5rem; height: 1.5rem;"></i></div>
                             Mi Outfit
                         </h2>
-                        <button onclick="toggleCart(false)" class="p-3 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-2xl transition-colors">
+                        <button onclick="toggleCart(false)" class="btn-close">
                             <i data-lucide="x"></i>
                         </button>
                     </div>
 
-                    <!-- Progress Bar -->
-                    <div class="bg-indigo-50 p-5 rounded-3xl border border-indigo-100">
-                        <div class="flex justify-between text-sm font-bold mb-3">
-                            <span class="text-indigo-900">Progreso de categorías</span>
-                            <span id="progress-text" class="text-pink-600">0/5 Completadas</span>
+                    <div class="progress-box">
+                        <div class="progress-labels">
+                            <span style="color: var(--c-indigo-900);">Progreso de categorías</span>
+                            <span id="progress-text" style="color: var(--c-pink-600);">0/5 Completadas</span>
                         </div>
-                        <div class="w-full bg-indigo-100 rounded-full h-4 overflow-hidden shadow-inner">
-                            <div id="progress-bar" class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-500 h-full rounded-full transition-all duration-1000 relative" style="width: 0%">
-                                <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBsNDAtNDBIMHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4yKSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+')] opacity-50"></div>
+                        <div class="progress-track">
+                            <div id="progress-bar" class="progress-fill" style="width: 0%">
+                                <div class="progress-pattern"></div>
                             </div>
                         </div>
-                        <p id="progress-complete" class="hidden text-sm text-center mt-3 text-indigo-600 font-bold flex items-center justify-center gap-2">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i> ¡Tienes un outfit completo!
+                        <p id="progress-complete" class="progress-success hidden">
+                            <i data-lucide="check-circle-2" style="width: 1rem; height: 1rem; color: #10b981;"></i> ¡Tienes un outfit completo!
                         </p>
                     </div>
                 </div>
 
-                <!-- Items List -->
-                <div id="cart-items" class="flex-1 overflow-y-auto p-6 relative z-0 space-y-4">
+                <div id="cart-items" class="cart-items-container hide-scrollbar">
                     <!-- Items injected here or empty state -->
                 </div>
 
-                <!-- Footer -->
-                <div class="p-8 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] z-10">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-gray-500 font-bold text-lg">Total de prendas:</span>
-                        <span id="cart-total-footer" class="text-4xl font-black font-display text-indigo-900">0</span>
+                <div class="cart-footer">
+                    <div class="cart-total-row">
+                        <span class="cart-total-label">Total de prendas:</span>
+                        <span id="cart-total-footer" class="cart-total-val font-display">0</span>
                     </div>
-                    <button id="checkout-btn" onclick="iniciarCompra()" disabled class="w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-3xl font-black text-xl flex items-center justify-center gap-3 hover:shadow-[0_15px_30px_rgba(79,70,229,0.3)] hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <button id="checkout-btn" onclick="iniciarCompra()" disabled class="btn-checkout">
                         <i data-lucide="sparkles"></i> Vestir mi Alma
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL DE CHECKOUT -->
-        <div id="checkout-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-hidden transition-all duration-500">
-            <div class="absolute inset-0 bg-indigo-950/60 backdrop-blur-lg" onclick="cerrarModalCheckout()"></div>
+        <!-- CHECKOUT MODAL -->
+        <div id="checkout-modal" class="modal-wrap">
+            <div class="modal-bg" onclick="cerrarModalCheckout()"></div>
             
-            <div class="relative bg-white rounded-[3rem] p-10 md:p-14 max-w-xl w-full shadow-[0_0_60px_rgba(0,0,0,0.3)] text-center transform transition-transform duration-500 scale-95 overflow-hidden" id="checkout-content-container">
-                <!-- Orbe decorativo modal -->
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-[50px] opacity-70"></div>
+            <div class="modal-content" id="checkout-content-container">
+                <div class="modal-decor"></div>
                 
-                <!-- State 1: Procesando -->
-                <div id="checkout-processing" class="flex flex-col items-center space-y-8 relative z-10">
-                    <div class="relative w-32 h-32 flex items-center justify-center">
-                        <div class="absolute inset-0 border-8 border-gray-100 border-t-pink-500 rounded-full animate-spin"></div>
-                        <i data-lucide="heart" class="w-10 h-10 text-pink-500 animate-pulse"></i>
+                <!-- State 1: Processing -->
+                <div id="checkout-processing" class="modal-inner">
+                    <div class="spinner-box">
+                        <div class="spinner-ring"></div>
+                        <i data-lucide="heart" class="spinner-icon" style="width: 2.5rem; height: 2.5rem;"></i>
                     </div>
                     <div>
-                        <h3 class="text-3xl font-black font-display text-indigo-950 mb-2">Tejiendo tu Outfit...</h3>
-                        <p class="text-lg text-gray-500 font-medium">Invirtiendo voluntad, paciencia y fe.</p>
+                        <h3 class="modal-title font-display">Tejiendo tu Outfit...</h3>
+                        <p class="modal-desc">Invirtiendo voluntad, paciencia y fe.</p>
                     </div>
                 </div>
 
-                <!-- State 2: Exito -->
-                <div id="checkout-success" class="hidden flex flex-col items-center space-y-6 relative z-10">
-                    <div class="w-32 h-32 bg-gradient-to-tr from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-2 shadow-[0_10px_30px_rgba(16,185,129,0.3)] animate-bounce-slow">
-                        <i data-lucide="check" class="text-white w-16 h-16 stroke-[3]"></i>
+                <!-- State 2: Success -->
+                <div id="checkout-success" class="modal-inner hidden">
+                    <div class="success-box">
+                        <i data-lucide="check" style="width: 4rem; height: 4rem; stroke-width: 3;"></i>
                     </div>
                     <div>
-                        <h3 class="text-4xl font-black font-display text-gray-900 mb-2">¡Alma Revestida!</h3>
-                        <p class="text-lg text-gray-600">Tu Outfit del Alma está listo. Ya estás preparado para enfrentar el día de la mejor manera.</p>
+                        <h3 class="modal-title font-display" style="font-size: 2.5rem;">¡Alma Revestida!</h3>
+                        <p class="modal-desc">Tu Outfit del Alma está listo. Ya estás preparado para enfrentar el día de la mejor manera.</p>
                     </div>
                     
-                    <div class="w-full bg-gray-50 p-6 rounded-3xl border border-gray-100 mt-4 mb-4 relative overflow-hidden">
-                        <div class="absolute left-0 top-0 w-2 h-full bg-gradient-to-b from-pink-400 to-indigo-500"></div>
-                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Resumen de Inversión</p>
-                        <p class="text-2xl font-black text-indigo-700"><span id="checkout-count">0</span> prendas adquiridas</p>
-                        <p class="text-base text-gray-500 mt-2">Pagado con: <span class="font-black text-pink-500 bg-pink-50 px-3 py-1 rounded-full">Voluntad y Fe</span></p>
+                    <div class="receipt-summary">
+                        <div class="receipt-bar"></div>
+                        <span class="receipt-label">Resumen de Inversión</span>
+                        <p class="receipt-val"><span id="checkout-count">0</span> prendas adquiridas</p>
+                        <p class="receipt-pay">Pagado con: <span class="pay-badge">Voluntad y Fe</span></p>
                     </div>
 
-                    <button onclick="handlePrint()" class="w-full py-5 bg-indigo-950 text-white rounded-3xl font-black text-lg flex items-center justify-center gap-3 hover:bg-indigo-900 hover:shadow-[0_15px_30px_rgba(30,27,75,0.4)] hover:-translate-y-1 transition-all">
+                    <button onclick="handlePrint()" class="btn-download" id="btn-download">
                         <i data-lucide="download"></i> Descargar Recordatorio (PDF)
                     </button>
-                    <button onclick="cerrarModalCheckout()" class="w-full py-3 text-gray-400 hover:text-gray-800 font-bold transition-colors">
+                    <button onclick="cerrarModalCheckout()" class="btn-text-close">
                         Cerrar y volver a la tienda
                     </button>
                 </div>
@@ -350,60 +537,57 @@
         </div>
 
         <!-- TOAST NOTIFICATION -->
-        <div id="toast" class="toast-hidden fixed bottom-10 left-1/2 flex items-center gap-4 bg-indigo-950/95 backdrop-blur-xl border border-white/10 text-white px-8 py-4 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.4)] font-bold text-base transition-all duration-300 z-50">
-            <div class="bg-pink-500 text-white rounded-full p-1.5 shadow-[0_0_10px_rgba(236,72,153,0.5)]">
-                <i data-lucide="check" class="w-5 h-5 stroke-[3]"></i>
+        <div id="toast" class="toast toast-hidden-state">
+            <div class="toast-icon">
+                <i data-lucide="check" style="width: 1.25rem; height: 1.25rem; stroke-width: 3;"></i>
             </div>
             <span id="toast-message">Mensaje de prueba</span>
         </div>
-
     </div>
 
-    <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
         // --- DATA ---
-        // Se reemplazan las imágenes (img) por emojis/íconos conceptuales (icon) para el diseño creativo (Glassmorphism)
         const products = [
-            { id: 1, name: 'Camisa de la Perseverancia', category: 'Camisas', gender: 'Dama', desc: 'Decido no rendirme. La perseverancia me recuerda que cada esfuerzo vale la pena.', verse: '“Corramos con perseverancia la carrera que tenemos por delante.” (Hebreos 12,1)', img: 'https://images.pexels.com/photos/6311392/pexels-photo-6311392.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-pink-400 to-rose-600' },
-            { id: 2, name: 'Camisa de la Alegría', category: 'Camisas', gender: 'Dama', desc: 'Me visto de alegría, no porque todo sea perfecto, sino porque confío.', verse: '“Estén siempre alegres en el Señor.” (Filipenses 4,4)', img: 'https://images.pexels.com/photos/7691217/pexels-photo-7691217.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-yellow-400 to-orange-500' },
-            { id: 3, name: 'Camisa de la Gratitud', category: 'Camisas', gender: 'Dama', desc: 'Hoy agradezco lo que soy, lo que tengo y lo que estoy aprendiendo.', verse: '“Den gracias en toda circunstancia.” (1 Tesalonicenses 5,18)', img: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-emerald-400 to-teal-500' },
-            { id: 4, name: 'Camisa de la Compasión', category: 'Camisas', gender: 'Dama', desc: 'Me pongo esta camisa para mirar a los demás con ternura y respeto.', verse: '“Revístanse de compasión, bondad y humildad.” (Colosenses 3,12)', img: 'https://images.pexels.com/photos/996329/pexels-photo-996329.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-purple-400 to-fuchsia-500' },
-            { id: 5, name: 'Camisa de la Esperanza', category: 'Camisas', gender: 'Dama', desc: 'Aunque no vea todo claro, sigo creyendo que mis pasos son guiados.', verse: '“La esperanza no defrauda.” (Romanos 5,5)', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=400', color: 'from-sky-400 to-blue-500' },
+            { id: 1, name: 'Camisa de la Perseverancia', category: 'Camisas', gender: 'Dama', desc: 'Decido no rendirme. La perseverancia me recuerda que cada esfuerzo vale la pena.', verse: '“Corramos con perseverancia la carrera que tenemos por delante.” (Hebreos 12,1)', img: 'https://images.pexels.com/photos/6311392/pexels-photo-6311392.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, var(--c-pink-400), var(--c-pink-600))' },
+            { id: 2, name: 'Camisa de la Alegría', category: 'Camisas', gender: 'Dama', desc: 'Me visto de alegría, no porque todo sea perfecto, sino porque confío.', verse: '“Estén siempre alegres en el Señor.” (Filipenses 4,4)', img: 'https://images.pexels.com/photos/7691217/pexels-photo-7691217.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #fbbf24, #f97316)' },
+            { id: 3, name: 'Camisa de la Gratitud', category: 'Camisas', gender: 'Dama', desc: 'Hoy agradezco lo que soy, lo que tengo y lo que estoy aprendiendo.', verse: '“Den gracias en toda circunstancia.” (1 Tesalonicenses 5,18)', img: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #34d399, #14b8a6)' },
+            { id: 4, name: 'Camisa de la Compasión', category: 'Camisas', gender: 'Dama', desc: 'Me pongo esta camisa para mirar a los demás con ternura y respeto.', verse: '“Revístanse de compasión, bondad y humildad.” (Colosenses 3,12)', img: 'https://images.pexels.com/photos/996329/pexels-photo-996329.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #c084fc, #d946ef)' },
+            { id: 5, name: 'Camisa de la Esperanza', category: 'Camisas', gender: 'Dama', desc: 'Aunque no vea todo claro, sigo creyendo que mis pasos son guiados.', verse: '“La esperanza no defrauda.” (Romanos 5,5)', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #38bdf8, #3b82f6)' },
             
-            { id: 6, name: 'Camisa de la Fortaleza', category: 'Camisas', gender: 'Caballero', desc: 'Hoy enfrento los retos con valentía y confianza inquebrantable.', verse: '“Todo lo puedo en Aquel que me fortalece.” (Filipenses 4,13)', img: 'https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-red-500 to-orange-600' },
-            { id: 7, name: 'Camisa de la Honestidad', category: 'Camisas', gender: 'Caballero', desc: 'Decido actuar con transparencia, incluso cuando nadie me ve.', verse: '“El Señor ama la justicia y el derecho.” (Salmo 33,5)', img: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=400', color: 'from-slate-500 to-gray-700' },
-            { id: 8, name: 'Camisa del Servicio', category: 'Camisas', gender: 'Caballero', desc: 'Me pongo esta camisa para servir sin esperar aplausos.', verse: '“El que quiera ser el primero, que sea servidor de todos.” (Marcos 9,35)', img: 'https://images.unsplash.com/photo-1618517351616-38fb9c5210c6?auto=format&fit=crop&q=80&w=400', color: 'from-amber-400 to-yellow-600' },
-            { id: 9, name: 'Camisa de la Responsabilidad', category: 'Camisas', gender: 'Caballero', desc: 'Asumo mis decisiones y cumplo mi palabra a cabalidad.', verse: '“El que es fiel en lo poco, también en lo mucho es fiel.” (Lucas 16,10)', img: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=400', color: 'from-blue-500 to-indigo-700' },
-            { id: 10, name: 'Camisa de la Fe', category: 'Camisas', gender: 'Caballero', desc: 'Hoy camino confiando, aunque no tenga todas las respuestas a la mano.', verse: '“Caminen por la fe, no por la vista.” (2 Corintios 5,7)', img: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-cyan-400 to-blue-600' },
+            { id: 6, name: 'Camisa de la Fortaleza', category: 'Camisas', gender: 'Caballero', desc: 'Hoy enfrento los retos con valentía y confianza inquebrantable.', verse: '“Todo lo puedo en Aquel que me fortalece.” (Filipenses 4,13)', img: 'https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #ef4444, #ea580c)' },
+            { id: 7, name: 'Camisa de la Honestidad', category: 'Camisas', gender: 'Caballero', desc: 'Decido actuar con transparencia, incluso cuando nadie me ve.', verse: '“El Señor ama la justicia y el derecho.” (Salmo 33,5)', img: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #64748b, #374151)' },
+            { id: 8, name: 'Camisa del Servicio', category: 'Camisas', gender: 'Caballero', desc: 'Me pongo esta camisa para servir sin esperar aplausos.', verse: '“El que quiera ser el primero, que sea servidor de todos.” (Marcos 9,35)', img: 'https://images.unsplash.com/photo-1618517351616-38fb9c5210c6?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #fbbf24, #ca8a04)' },
+            { id: 9, name: 'Camisa de la Responsabilidad', category: 'Camisas', gender: 'Caballero', desc: 'Asumo mis decisiones y cumplo mi palabra a cabalidad.', verse: '“El que es fiel en lo poco, también en lo mucho es fiel.” (Lucas 16,10)', img: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #3b82f6, #4338ca)' },
+            { id: 10, name: 'Camisa de la Fe', category: 'Camisas', gender: 'Caballero', desc: 'Hoy camino confiando, aunque no tenga todas las respuestas a la mano.', verse: '“Caminen por la fe, no por la vista.” (2 Corintios 5,7)', img: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #22d3ee, #2563eb)' },
             
-            { id: 11, name: 'Jeans de la Paciencia', category: 'Jeans', gender: 'Unisex', desc: 'Aprendo a esperar sin desesperarme en el proceso.', verse: '“Sean pacientes en la tribulación.” (Romanos 12,12)', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=400', color: 'from-indigo-400 to-blue-700' },
-            { id: 12, name: 'Jeans de la Humildad', category: 'Jeans', gender: 'Unisex', desc: 'Camino con pies de plomo sin sentirme más que nadie.', verse: '“Dios enaltece a los humildes.” (Santiago 4,10)', img: 'https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&q=80&w=400', color: 'from-stone-500 to-stone-700' },
-            { id: 13, name: 'Jeans de la Justicia', category: 'Jeans', gender: 'Unisex', desc: 'Actúo siempre buscando el bien común y la equidad.', verse: '“Practiquen la justicia.” (Miqueas 6,8)', img: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&q=80&w=400', color: 'from-sky-500 to-indigo-600' },
-            { id: 14, name: 'Jeans de la Solidaridad', category: 'Jeans', gender: 'Unisex', desc: 'No camino solo; acompaño y me dejo acompañar en la ruta.', verse: '“Lleven los unos las cargas de los otros.” (Gálatas 6,2)', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=400', color: 'from-teal-400 to-emerald-600' },
-            { id: 15, name: 'Jeans de la Coherencia', category: 'Jeans', gender: 'Unisex', desc: 'Vivo lo que creo firmemente cada día.', verse: '“Que su sí sea sí.” (Mateo 5,37)', img: 'https://images.unsplash.com/photo-1529391409740-59f2cea08bc6?auto=format&fit=crop&q=80&w=400', color: 'from-violet-500 to-purple-700' },
+            { id: 11, name: 'Jeans de la Paciencia', category: 'Jeans', gender: 'Unisex', desc: 'Aprendo a esperar sin desesperarme en el proceso.', verse: '“Sean pacientes en la tribulación.” (Romanos 12,12)', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #818cf8, #1d4ed8)' },
+            { id: 12, name: 'Jeans de la Humildad', category: 'Jeans', gender: 'Unisex', desc: 'Camino con pies de plomo sin sentirme más que nadie.', verse: '“Dios enaltece a los humildes.” (Santiago 4,10)', img: 'https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #78716c, #44403c)' },
+            { id: 13, name: 'Jeans de la Justicia', category: 'Jeans', gender: 'Unisex', desc: 'Actúo siempre buscando el bien común y la equidad.', verse: '“Practiquen la justicia.” (Miqueas 6,8)', img: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #0ea5e9, #4f46e5)' },
+            { id: 14, name: 'Jeans de la Solidaridad', category: 'Jeans', gender: 'Unisex', desc: 'No camino solo; acompaño y me dejo acompañar en la ruta.', verse: '“Lleven los unos las cargas de los otros.” (Gálatas 6,2)', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #2dd4bf, #059669)' },
+            { id: 15, name: 'Jeans de la Coherencia', category: 'Jeans', gender: 'Unisex', desc: 'Vivo lo que creo firmemente cada día.', verse: '“Que su sí sea sí.” (Mateo 5,37)', img: 'https://images.unsplash.com/photo-1529391409740-59f2cea08bc6?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #8b5cf6, #7e22ce)' },
             
-            { id: 16, name: 'Zapatos de la Paz', category: 'Zapatos', gender: 'Unisex', desc: 'Camino sembrando reconciliación por donde paso.', verse: '“Dichosos los que trabajan por la paz.” (Mateo 5,9)', img: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&q=80&w=400', color: 'from-slate-400 to-slate-600' },
-            { id: 17, name: 'Zapatos del Perdón', category: 'Zapatos', gender: 'Unisex', desc: 'Hoy elijo soltar rencores y andar ligero.', verse: '“Perdónense como Dios los perdonó.” (Efesios 4,32)', img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=400', color: 'from-rose-400 to-pink-600' },
-            { id: 18, name: 'Zapatos de la Confianza', category: 'Zapatos', gender: 'Unisex', desc: 'No tengo miedo, sé que Dios va conmigo en cada paso.', verse: '“No temas, yo estoy contigo.” (Isaías 41,10)', img: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=400', color: 'from-amber-400 to-orange-500' },
+            { id: 16, name: 'Zapatos de la Paz', category: 'Zapatos', gender: 'Unisex', desc: 'Camino sembrando reconciliación por donde paso.', verse: '“Dichosos los que trabajan por la paz.” (Mateo 5,9)', img: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #94a3b8, #475569)' },
+            { id: 17, name: 'Zapatos del Perdón', category: 'Zapatos', gender: 'Unisex', desc: 'Hoy elijo soltar rencores y andar ligero.', verse: '“Perdónense como Dios los perdonó.” (Efesios 4,32)', img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #fb7185, #db2777)' },
+            { id: 18, name: 'Zapatos de la Confianza', category: 'Zapatos', gender: 'Unisex', desc: 'No tengo miedo, sé que Dios va conmigo en cada paso.', verse: '“No temas, yo estoy contigo.” (Isaías 41,10)', img: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #fbbf24, #f97316)' },
             
-            { id: 19, name: 'Collar de la Dignidad', category: 'Accesorios', gender: 'Dama', desc: 'Recuerdo siempre que soy hija amada de Dios.', verse: '“Eres valioso a mis ojos.” (Isaías 43,4)', img: 'https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-fuchsia-400 to-purple-600' },
-            { id: 20, name: 'Aretes de la Escucha', category: 'Accesorios', gender: 'Dama', desc: 'Antes de hablar, aprendo a escuchar con el corazón.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400', color: 'from-emerald-400 to-green-600' },
-            { id: 21, name: 'Bolso de la Generosidad', category: 'Accesorios', gender: 'Dama', desc: 'Llevo conmigo la disposición infinita de compartir.', verse: '“Hay más alegría en dar.” (Hechos 20,35)', img: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-rose-400 to-red-500' },
-            { id: 22, name: 'Moños de la Alegría', category: 'Accesorios', gender: 'Dama', desc: 'Llevo una actitud que ilumina todos los ambientes.', verse: '“Alégrense siempre.” (1 Tesalonicenses 5,16)', img: 'https://images.pexels.com/photos/1805411/pexels-photo-1805411.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-yellow-400 to-amber-500' },
-            { id: 23, name: 'Espejo de la Autoestima', category: 'Accesorios', gender: 'Dama', desc: 'Me miro con los ojos del amor, no con los de la crítica.', verse: '“Eres preciosa a mis ojos.” (Isaías 43,4)', img: 'https://images.pexels.com/photos/2853432/pexels-photo-2853432.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-pink-300 to-rose-500' },
-            { id: 24, name: 'Maquillaje Auténtico', category: 'Accesorios', gender: 'Dama', desc: 'No escondo quién soy, mi esencia brilla.', verse: '“Dios mira el corazón.” (1 Samuel 16,7)', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400', color: 'from-purple-400 to-indigo-600' },
+            { id: 19, name: 'Collar de la Dignidad', category: 'Accesorios', gender: 'Dama', desc: 'Recuerdo siempre que soy hija amada de Dios.', verse: '“Eres valioso a mis ojos.” (Isaías 43,4)', img: 'https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #e879f9, #9333ea)' },
+            { id: 20, name: 'Aretes de la Escucha', category: 'Accesorios', gender: 'Dama', desc: 'Antes de hablar, aprendo a escuchar con el corazón.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #34d399, #16a34a)' },
+            { id: 21, name: 'Bolso de la Generosidad', category: 'Accesorios', gender: 'Dama', desc: 'Llevo conmigo la disposición infinita de compartir.', verse: '“Hay más alegría en dar.” (Hechos 20,35)', img: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #fb7185, #ef4444)' },
+            { id: 22, name: 'Moños de la Alegría', category: 'Accesorios', gender: 'Dama', desc: 'Llevo una actitud que ilumina todos los ambientes.', verse: '“Alégrense siempre.” (1 Tesalonicenses 5,16)', img: 'https://images.pexels.com/photos/1805411/pexels-photo-1805411.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #facc15, #f59e0b)' },
+            { id: 23, name: 'Espejo de la Autoestima', category: 'Accesorios', gender: 'Dama', desc: 'Me miro con los ojos del amor, no con los de la crítica.', verse: '“Eres preciosa a mis ojos.” (Isaías 43,4)', img: 'https://images.pexels.com/photos/2853432/pexels-photo-2853432.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #f9a8d4, #f43f5e)' },
+            { id: 24, name: 'Maquillaje Auténtico', category: 'Accesorios', gender: 'Dama', desc: 'No escondo quién soy, mi esencia brilla.', verse: '“Dios mira el corazón.” (1 Samuel 16,7)', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #c084fc, #4f46e5)' },
             
-            { id: 25, name: 'Reloj de la Disciplina', category: 'Accesorios', gender: 'Caballero', desc: 'Administro bien mi tiempo y valoro mis responsabilidades.', verse: '“Aprovechen bien el tiempo.” (Efesios 5,16)', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=400', color: 'from-slate-600 to-slate-800' },
-            { id: 26, name: 'Gorra de la Identidad', category: 'Accesorios', gender: 'Caballero', desc: 'No me dejo definir por modas, sino por mis valores sólidos.', verse: '“Ustedes son sal de la tierra.” (Mateo 5,13)', img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=400', color: 'from-blue-500 to-blue-700' },
-            { id: 27, name: 'Gel del Orden Interior', category: 'Accesorios', gender: 'Caballero', desc: 'Organizo mis prioridades antes de actuar.', verse: '“Todo hágase con orden.” (1 Corintios 14,40)', img: 'https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=400', color: 'from-cyan-400 to-blue-600' },
-            { id: 28, name: 'Cinturón de la Verdad', category: 'Accesorios', gender: 'Caballero', desc: 'Me ajusto a la verdad, y desecho la mentira.', verse: '“Manténganse firmes con la verdad.” (Efesios 6,14)', img: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&q=80&w=400', color: 'from-amber-600 to-orange-800' },
-            { id: 29, name: 'Audífonos Activos', category: 'Accesorios', gender: 'Caballero', desc: 'Escucho para comprender profundamente, no solo para responder.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400', color: 'from-zinc-500 to-zinc-800' },
+            { id: 25, name: 'Reloj de la Disciplina', category: 'Accesorios', gender: 'Caballero', desc: 'Administro bien mi tiempo y valoro mis responsabilidades.', verse: '“Aprovechen bien el tiempo.” (Efesios 5,16)', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #475569, #1e293b)' },
+            { id: 26, name: 'Gorra de la Identidad', category: 'Accesorios', gender: 'Caballero', desc: 'No me dejo definir por modas, sino por mis valores sólidos.', verse: '“Ustedes son sal de la tierra.” (Mateo 5,13)', img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #3b82f6, #1d4ed8)' },
+            { id: 27, name: 'Gel del Orden Interior', category: 'Accesorios', gender: 'Caballero', desc: 'Organizo mis prioridades antes de actuar.', verse: '“Todo hágase con orden.” (1 Corintios 14,40)', img: 'https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #22d3ee, #2563eb)' },
+            { id: 28, name: 'Cinturón de la Verdad', category: 'Accesorios', gender: 'Caballero', desc: 'Me ajusto a la verdad, y desecho la mentira.', verse: '“Manténganse firmes con la verdad.” (Efesios 6,14)', img: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #d97706, #9a3412)' },
+            { id: 29, name: 'Audífonos Activos', category: 'Accesorios', gender: 'Caballero', desc: 'Escucho para comprender profundamente, no solo para responder.', verse: '“Sean prontos para escuchar.” (Santiago 1,19)', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #71717a, #27272a)' },
             
-            { id: 30, name: 'Buso de Confianza', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Aunque el día esté frío o complicado, sé que no estoy solo.', verse: '“El Señor es mi refugio.” (Salmo 91,2)', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=400', color: 'from-sky-400 to-blue-600' },
-            { id: 31, name: 'Chaqueta Resiliente', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Si algo no sale como esperaba, me levanto con más fuerza.', verse: '“Siete veces cae el justo y vuelve a levantarse.” (Proverbios 24,16)', img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=400', color: 'from-orange-500 to-red-600' },
-            { id: 32, name: 'Chaqueta de Control', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No reacciono por impulso. Pienso, respiro, actúo.', verse: '“Mejor es el que domina su espíritu.” (Proverbios 16,32)', img: 'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'from-slate-700 to-black' },
-            { id: 33, name: 'Buso de la Identidad', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No necesito imitar a nadie. Soy una creación única.', verse: '“Te he creado de manera admirable.” (Salmo 139,14)', img: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=400', color: 'from-fuchsia-500 to-purple-800' },
-            { id: 34, name: 'Sombrero Prudente', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No todo lo que puedo hacer me conviene hacerlo hoy.', verse: '“Todo me es lícito, pero no todo me conviene.” (1 Corintios 6,12)', img: 'https://images.unsplash.com/photo-1533055640609-24b498dfd74c?auto=format&fit=crop&q=80&w=400', color: 'from-stone-600 to-stone-800' },
+            { id: 30, name: 'Buso de Confianza', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Aunque el día esté frío o complicado, sé que no estoy solo.', verse: '“El Señor es mi refugio.” (Salmo 91,2)', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #38bdf8, #2563eb)' },
+            { id: 31, name: 'Chaqueta Resiliente', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'Si algo no sale como esperaba, me levanto con más fuerza.', verse: '“Siete veces cae el justo y vuelve a levantarse.” (Proverbios 24,16)', img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #f97316, #dc2626)' },
+            { id: 32, name: 'Chaqueta de Control', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No reacciono por impulso. Pienso, respiro, actúo.', verse: '“Mejor es el que domina su espíritu.” (Proverbios 16,32)', img: 'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'linear-gradient(to top right, #334155, #000000)' },
+            { id: 33, name: 'Buso de la Identidad', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No necesito imitar a nadie. Soy una creación única.', verse: '“Te he creado de manera admirable.” (Salmo 139,14)', img: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #d946ef, #6b21a8)' },
+            { id: 34, name: 'Sombrero Prudente', category: 'Prendas Adicionales', gender: 'Unisex', desc: 'No todo lo que puedo hacer me conviene hacerlo hoy.', verse: '“Todo me es lícito, pero no todo me conviene.” (1 Corintios 6,12)', img: 'https://images.unsplash.com/photo-1533055640609-24b498dfd74c?auto=format&fit=crop&q=80&w=400', color: 'linear-gradient(to top right, #57534e, #292524)' },
         ];
 
         const categoriesData = [
@@ -414,11 +598,9 @@
             { id: 'Prendas Adicionales', name: 'Extras', emoji: '🧥', desc: 'Para abrigarte en los climas difíciles' }
         ];
 
-        // --- STATE ---
         let cart = [];
         let currentFilter = 'Todos';
 
-        // --- AUDIO ENGINE ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playMagicChime() {
@@ -441,7 +623,7 @@
                 playTone(659.25, now + 0.1, 0.4); 
                 playTone(783.99, now + 0.2, 0.6); 
                 playTone(1046.50, now + 0.3, 0.8, 'triangle'); 
-            } catch(e) { console.warn("Audio error:", e); }
+            } catch(e) {}
         }
 
         function playPop() {
@@ -458,10 +640,9 @@
                 gain.connect(audioCtx.destination);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.1);
-            } catch(e) { console.warn("Audio error:", e); }
+            } catch(e) {}
         }
 
-        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('receipt-date').innerText = `Fecha: ${new Date().toLocaleDateString()}`;
             renderCategoryNav();
@@ -471,12 +652,11 @@
             lucide.createIcons();
         });
 
-        // --- RENDER FUNCTIONS ---
         function renderCategoryNav() {
             const nav = document.getElementById('category-nav');
             nav.innerHTML = categoriesData.map(cat => `
-                <button onclick="scrollToSection('${cat.id}')" class="flex items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full hover:bg-white hover:shadow-[0_5px_15px_rgba(0,0,0,0.05)] transition-all snap-center font-bold text-gray-500 hover:text-indigo-600 border border-transparent hover:border-gray-200">
-                    <span class="text-xl drop-shadow-sm">${cat.emoji}</span> ${cat.name}
+                <button onclick="scrollToSection('${cat.id}')" class="cat-nav-btn">
+                    <span class="cat-nav-emoji">${cat.emoji}</span> ${cat.name}
                 </button>
             `).join('');
         }
@@ -485,10 +665,8 @@
             const container = document.getElementById('filters-container');
             const filters = ['Todos', 'Dama', 'Caballero'];
             container.innerHTML = filters.map(f => {
-                const activeClass = f === currentFilter 
-                    ? 'bg-indigo-950 text-white shadow-[0_10px_20px_rgba(30,27,75,0.3)] scale-105'
-                    : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200';
-                return `<button onclick="setFilter('${f}')" class="px-8 py-3 rounded-2xl text-sm font-black transition-all duration-300 ${activeClass}">${f}</button>`;
+                const activeClass = f === currentFilter ? 'active' : '';
+                return `<button onclick="setFilter('${f}')" class="filter-btn ${activeClass}">${f}</button>`;
             }).join('');
         }
 
@@ -506,64 +684,47 @@
                 if (categoryProducts.length === 0) return;
 
                 let sectionHTML = `
-                    <section id="${category.id}" class="scroll-mt-40">
-                        <div class="flex flex-col md:flex-row items-center gap-6 mb-10 bg-white/50 p-8 rounded-[2.5rem] border border-white backdrop-blur-xl shadow-lg relative overflow-hidden">
-                            <div class="absolute right-0 top-0 w-64 h-64 bg-gradient-to-br from-pink-200 to-transparent rounded-full mix-blend-multiply opacity-50 -translate-y-1/2 translate-x-1/2"></div>
-                            
-                            <div class="text-6xl drop-shadow-[0_10px_10px_rgba(0,0,0,0.2)] transform hover:scale-110 hover:rotate-12 transition-all duration-500 relative z-10 bg-white p-6 rounded-3xl shadow-xl">
-                                ${category.emoji}
-                            </div>
-                            <div class="text-center md:text-left relative z-10">
-                                <h2 class="text-4xl font-black font-display text-indigo-950 tracking-tight">${category.name}</h2>
-                                <p class="text-lg text-pink-500 font-bold mt-2">${category.desc}</p>
+                    <section id="${category.id}" class="category-section">
+                        <div class="category-header">
+                            <div class="category-bg-decor"></div>
+                            <div class="category-emoji">${category.emoji}</div>
+                            <div class="category-info">
+                                <h2 class="category-title font-display">${category.name}</h2>
+                                <p class="category-desc">${category.desc}</p>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        <div class="products-grid">
                 `;
 
                 categoryProducts.forEach(product => {
                     const inCart = cart.some(item => item.id === product.id);
-                    
-                    const btnClass = inCart 
-                        ? 'bg-emerald-50 text-emerald-600 border-2 border-emerald-200 shadow-inner'
-                        : 'btn-mirror bg-indigo-950 text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(236,72,153,0.3)] hover:-translate-y-1';
-                        
+                    const btnClass = inCart ? 'btn-action btn-equipped' : 'btn-action btn-add';
                     const btnContent = inCart
-                        ? `<i data-lucide="check-circle-2" class="w-5 h-5 animate-pulse"></i> Equipado en mi alma`
-                        : `<i data-lucide="plus" class="w-5 h-5"></i> Revestir mi alma`;
+                        ? `<i data-lucide="check-circle-2" style="width: 1.25rem; height: 1.25rem;"></i> Equipado en mi alma`
+                        : `<i data-lucide="plus" style="width: 1.25rem; height: 1.25rem;"></i> Revestir mi alma`;
 
-                    // Creación visual usando las imágenes originales pero con el estilo de la nueva UI
-                    const visualAbstract = `
-                        <div class="relative h-64 overflow-hidden group-hover:shadow-inner transition-all duration-500 bg-gray-100">
-                            <!-- Overlay de color en degradado suave -->
-                            <div class="absolute inset-0 bg-gradient-to-tr ${product.color} opacity-40 mix-blend-multiply group-hover:opacity-20 transition-opacity duration-500 z-10"></div>
-                            
-                            <!-- Imagen Original de Unsplash/Pexels -->
-                            <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 relative z-0" />
-                            
-                            <!-- Badge de Género -->
-                            <div class="absolute top-5 left-5 z-20">
-                                <span class="bg-white/90 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-2xl text-indigo-900 shadow-lg border border-white/50 flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full ${product.gender==='Dama'?'bg-pink-400':(product.gender==='Caballero'?'bg-blue-400':'bg-purple-400')}"></span> ${product.gender}
-                                </span>
-                            </div>
-                        </div>
-                    `;
+                    const dotColor = product.gender === 'Dama' ? 'var(--c-pink-400)' : (product.gender === 'Caballero' ? 'var(--c-cyan-500)' : 'var(--c-purple-500)');
 
                     sectionHTML += `
-                        <div class="group relative bg-white rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-[0_40px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 transform hover:-translate-y-3 flex flex-col h-full border border-gray-100 z-10">
-                            ${visualAbstract}
+                        <div class="card">
+                            <div class="card-img-container">
+                                <div class="card-img-overlay" style="background: ${product.color}"></div>
+                                <img src="${product.img}" alt="${product.name}" class="card-img" onerror="this.src='https://placehold.co/400x400/f3f4f6/a8a29e?text=Imagen+no+disponible'" />
+                                <div class="card-gender-badge">
+                                    <span class="badge-dot" style="background-color: ${dotColor}"></span> ${product.gender}
+                                </div>
+                            </div>
                             
-                            <div class="p-8 flex flex-col flex-grow relative bg-white z-30">
-                                <h4 class="text-2xl font-black font-display text-indigo-950 leading-tight mb-3 group-hover:text-pink-600 transition-colors">${product.name}</h4>
-                                <p class="text-sm text-gray-500 mb-6 flex-grow leading-relaxed font-medium">${product.desc}</p>
+                            <div class="card-body">
+                                <h4 class="card-title font-display">${product.name}</h4>
+                                <p class="card-desc">${product.desc}</p>
                                 
-                                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100 mb-6 relative overflow-hidden group-hover:bg-indigo-50/50 transition-colors">
-                                    <div class="absolute left-0 top-0 w-1.5 h-full bg-gradient-to-b ${product.color}"></div>
-                                    <p class="text-sm font-serif italic text-gray-700 font-medium leading-relaxed pl-2">"${product.verse.replace(/“|”/g,'')}"</p>
+                                <div class="card-verse-box">
+                                    <div class="card-verse-border" style="background: ${product.color}"></div>
+                                    <p class="card-verse-text">"${product.verse.replace(/“|”/g,'')}"</p>
                                 </div>
 
-                                <button onclick="addToCart(${product.id})" class="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex justify-center items-center gap-3 transition-all duration-300 ${btnClass}">
+                                <button onclick="addToCart(${product.id})" class="${btnClass}">
                                     ${btnContent}
                                 </button>
                             </div>
@@ -578,7 +739,6 @@
             lucide.createIcons();
         }
 
-        // --- ACTIONS ---
         function setFilter(f) {
             playPop();
             currentFilter = f;
@@ -590,7 +750,7 @@
             playPop();
             const element = document.getElementById(id);
             if (element) {
-                const yOffset = -140; 
+                const yOffset = -150; 
                 const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
                 window.scrollTo({ top: y, behavior: 'smooth' });
             }
@@ -652,25 +812,25 @@
             const listContainer = document.getElementById('cart-items');
             if (cart.length === 0) {
                 listContainer.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-center opacity-60 space-y-6 py-16">
-                        <i data-lucide="image" class="w-24 h-24 text-indigo-200"></i>
-                        <p class="text-2xl font-black font-display text-indigo-900">Tu interior está vacío.</p>
-                        <p class="text-sm text-gray-500 max-w-[200px] leading-relaxed">¿Qué actitud necesitas hoy para iluminar tu día?</p>
+                    <div class="empty-cart">
+                        <i data-lucide="image"></i>
+                        <h3 class="font-display">Tu interior está vacío.</h3>
+                        <p>¿Qué actitud necesitas hoy para iluminar tu día?</p>
                     </div>
                 `;
             } else {
                 listContainer.innerHTML = cart.map(item => `
-                    <div class="bg-white p-3 rounded-[2rem] shadow-sm hover:shadow-md border border-gray-100 flex gap-4 items-center group transition-all duration-300">
-                        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-inner flex-shrink-0 relative">
-                            <div class="absolute inset-0 bg-gradient-to-tr ${item.color} opacity-40 mix-blend-multiply z-10 group-hover:opacity-20 transition-opacity duration-300"></div>
-                            <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform z-0 relative" />
+                    <div class="cart-item">
+                        <div class="cart-item-img-box">
+                            <div class="cart-item-overlay" style="background: ${item.color}"></div>
+                            <img src="${item.img}" alt="${item.name}" class="cart-item-img" onerror="this.src='https://placehold.co/400x400/f3f4f6/a8a29e?text=No+Img'" />
                         </div>
-                        <div class="flex-1 py-2">
-                            <span class="text-[9px] font-black uppercase text-pink-500 tracking-widest bg-pink-50 px-2.5 py-1 rounded-lg">${item.category}</span>
-                            <h4 class="font-bold font-display text-indigo-950 mt-1.5 leading-tight text-sm">${item.name}</h4>
+                        <div class="cart-item-info">
+                            <span class="cart-item-cat">${item.category}</span>
+                            <h4 class="cart-item-title font-display">${item.name}</h4>
                         </div>
-                        <button onclick="removeFromCart(${item.id})" class="mr-2 p-3 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-2xl transition-colors shadow-sm" title="Quitar">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        <button onclick="removeFromCart(${item.id})" class="btn-remove" title="Quitar">
+                            <i data-lucide="trash-2" style="width: 1.25rem; height: 1.25rem;"></i>
                         </button>
                     </div>
                 `).join('');
@@ -683,30 +843,24 @@
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').innerText = msg;
             
-            toast.classList.remove('toast-hidden');
-            toast.classList.add('toast-visible');
+            toast.classList.remove('toast-hidden-state');
+            toast.classList.add('visible');
             
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
-                toast.classList.remove('toast-visible');
-                toast.classList.add('toast-hidden');
+                toast.classList.remove('visible');
+                toast.classList.add('toast-hidden-state');
             }, 3000);
         }
 
-        // --- CHECKOUT & PRINT ---
         function iniciarCompra() {
             playMagicChime();
             toggleCart(false);
             const modal = document.getElementById('checkout-modal');
-            const contentContainer = document.getElementById('checkout-content-container');
             const processing = document.getElementById('checkout-processing');
             const success = document.getElementById('checkout-success');
             
-            modal.classList.remove('modal-hidden');
-            modal.classList.add('modal-visible');
-            contentContainer.classList.remove('scale-95');
-            contentContainer.classList.add('scale-100');
-            
+            modal.classList.add('visible');
             processing.classList.remove('hidden');
             success.classList.add('hidden');
 
@@ -720,12 +874,7 @@
 
         function cerrarModalCheckout() {
             const modal = document.getElementById('checkout-modal');
-            const contentContainer = document.getElementById('checkout-content-container');
-            
-            modal.classList.remove('modal-visible');
-            modal.classList.add('modal-hidden');
-            contentContainer.classList.remove('scale-100');
-            contentContainer.classList.add('scale-95');
+            modal.classList.remove('visible');
             
             if(!document.getElementById('checkout-success').classList.contains('hidden')) {
                  cart = [];
@@ -735,17 +884,17 @@
         }
 
         function handlePrint() {
-            const btn = document.querySelector('#checkout-success button');
+            const btn = document.getElementById('btn-download');
             const originalText = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i> Generando Recuerdo...`;
+            btn.innerHTML = `<i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 1.25rem; height: 1.25rem;"></i> Generando Recordatorio...`;
             lucide.createIcons();
 
             const receiptItems = document.getElementById('receipt-items');
             receiptItems.innerHTML = cart.map(item => `
-                <div class="pdf-item break-inside-avoid border-l-4 border-pink-400 pl-5 py-3 mb-4 bg-gray-50 rounded-r-xl">
-                    <h3 class="text-xl font-bold font-display text-indigo-900">${item.name}</h3>
-                    <p class="text-gray-600 my-1 text-sm">${item.desc}</p>
-                    <p class="font-serif italic text-gray-800 font-semibold mt-2">"${item.verse.replace(/“|”/g,'')}"</p>
+                <div class="pdf-item">
+                    <h3 class="pdf-item-title">${item.name}</h3>
+                    <p class="pdf-item-desc">${item.desc}</p>
+                    <p class="pdf-item-verse">"${item.verse.replace(/“|”/g,'')}"</p>
                 </div>
             `).join('');
             document.getElementById('receipt-count').innerText = cart.length;
@@ -754,12 +903,7 @@
             const receiptView = document.getElementById('receipt-view');
             
             mainApp.style.display = 'none';
-            
-            receiptView.classList.remove('hidden');
-            receiptView.style.display = 'block';
-            receiptView.style.width = '800px';
-            receiptView.style.margin = '0 auto';
-
+            receiptView.classList.add('active');
             window.scrollTo(0, 0);
 
             setTimeout(() => {
@@ -767,24 +911,15 @@
                     margin:       [15, 10, 15, 10],
                     filename:     'Outfit_del_Alma.pdf',
                     image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { 
-                        scale: 2, 
-                        useCORS: true, 
-                        scrollY: 0,
-                        windowWidth: 800 
-                    },
+                    html2canvas:  { scale: 2, useCORS: true, scrollY: 0, windowWidth: 800 },
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
                     pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
                 html2pdf().set(opt).from(receiptView).save().then(() => {
-                    receiptView.style.display = '';
-                    receiptView.style.width = '';
-                    receiptView.style.margin = '';
-                    
                     btn.innerHTML = originalText;
-                    receiptView.classList.add('hidden');
-                    mainApp.style.display = '';
+                    receiptView.classList.remove('active');
+                    mainApp.style.display = 'block';
                     
                     cerrarModalCheckout();
                     cart = [];
@@ -792,12 +927,9 @@
                     renderProducts();
                 }).catch(err => {
                     console.error("Error al generar PDF:", err);
-                    receiptView.style.display = '';
-                    receiptView.style.width = '';
-                    receiptView.style.margin = '';
                     btn.innerHTML = originalText;
-                    receiptView.classList.add('hidden');
-                    mainApp.style.display = '';
+                    receiptView.classList.remove('active');
+                    mainApp.style.display = 'block';
                 });
             }, 150);
         }
