@@ -5,65 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Outfit del Alma - Cibercolegio UCN</title>
     
-    <!-- Lucide Icons (Ligero y seguro) -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- HTML2PDF para forzar la descarga del archivo PDF -->
+    <!-- HTML2PDF para descargar el PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;900&display=swap');
         
         :root {
-            --c-indigo-50: #eef2ff;
-            --c-indigo-100: #e0e7ff;
-            --c-indigo-600: #4f46e5;
-            --c-indigo-900: #312e81;
-            --c-indigo-950: #1e1b4b;
+            --c-indigo-50: #eef2ff; --c-indigo-100: #e0e7ff; --c-indigo-600: #4f46e5;
+            --c-indigo-900: #312e81; --c-indigo-950: #1e1b4b;
             
-            --c-pink-50: #fdf2f8;
-            --c-pink-100: #fce7f3;
-            --c-pink-300: #f9a8d4;
-            --c-pink-400: #f472b6;
-            --c-pink-500: #ec4899;
-            --c-pink-600: #db2777;
+            --c-pink-50: #fdf2f8; --c-pink-100: #fce7f3; --c-pink-300: #f9a8d4;
+            --c-pink-400: #f472b6; --c-pink-500: #ec4899; --c-pink-600: #db2777;
             
-            --c-purple-500: #a855f7;
-            --c-purple-600: #9333ea;
+            --c-purple-500: #a855f7; --c-purple-600: #9333ea;
             
-            --c-cyan-300: #67e8f9;
-            --c-cyan-500: #06b6d4;
+            --c-cyan-300: #67e8f9; --c-cyan-500: #06b6d4;
             
-            --c-gray-50: #f9fafb;
-            --c-gray-100: #f3f4f6;
-            --c-gray-200: #e5e7eb;
-            --c-gray-400: #9ca3af;
-            --c-gray-500: #6b7280;
-            --c-gray-600: #4b5563;
-            --c-gray-700: #374151;
-            --c-gray-800: #1f2937;
+            --c-gray-50: #f9fafb; --c-gray-100: #f3f4f6; --c-gray-200: #e5e7eb;
+            --c-gray-400: #9ca3af; --c-gray-500: #6b7280; --c-gray-600: #4b5563;
+            --c-gray-700: #374151; --c-gray-800: #1f2937;
             
             --bg-body: #f4f6fb;
             --font-sans: 'Inter', sans-serif;
             --font-display: 'Outfit', sans-serif;
         }
 
-        /* RESET & BASE */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--c-gray-800); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        body { 
+            font-family: var(--font-sans); background-color: var(--bg-body); 
+            color: var(--c-gray-800); overflow-x: hidden; -webkit-font-smoothing: antialiased; 
+        }
         h1, h2, h3, h4, h5, h6, .font-display { font-family: var(--font-display); }
-        button { border: none; background: transparent; cursor: pointer; font-family: inherit; }
+        button { border: none; background: transparent; cursor: pointer; font-family: inherit; outline: none; }
         ul, ol { list-style: none; }
         img { max-width: 100%; height: auto; display: block; }
+        .hidden { display: none !important; }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--c-gray-50); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--c-pink-500), var(--c-purple-500), var(--c-cyan-500)); border-radius: 10px; border: 2px solid var(--c-gray-50); }
+        /* Scrollbar Personalizado */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--c-gray-50); border-left: 1px solid var(--c-gray-200); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--c-pink-500), var(--c-purple-500), var(--c-cyan-500)); border-radius: 10px; border: 3px solid var(--c-gray-50); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* ANIMATIONS */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(20px, -30px) scale(1.05); }
@@ -84,30 +72,17 @@
             50% { transform: translateY(0); }
         }
 
-        /* BACKGROUND EFFECTS (Optimized for mobile) */
         .bg-orbs-container { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
         .orb { position: absolute; border-radius: 50%; filter: blur(60px); mix-blend-mode: multiply; opacity: 0.5; animation: blob 10s infinite alternate; }
         .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(249, 168, 212, 0.5); }
         .orb-2 { top: 20%; right: -10%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(165, 180, 252, 0.5); animation-delay: 2s; }
         .orb-3 { bottom: -20%; left: 20%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(103, 232, 249, 0.5); animation-delay: 4s; }
 
-        @media (max-width: 768px) {
-            .orb { filter: blur(40px); opacity: 0.4; }
-        }
-
-        /* LAYOUT & UTILITIES */
         .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
         @media (min-width: 640px) { .container { padding: 0 1.5rem; } }
         @media (min-width: 1024px) { .container { padding: 0 2rem; } }
-        .text-center { text-align: center; }
-        .hidden { display: none !important; }
-        .flex { display: flex; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .justify-center { justify-content: center; }
         
-        /* NAVBAR */
-        .navbar { position: fixed; top: 0; width: 100%; z-index: 40; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 40; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 6rem; }
         .logo-group { display: flex; align-items: center; gap: 1rem; cursor: pointer; }
         .logo-icon-wrapper { position: relative; width: 3.5rem; height: 3.5rem; background: linear-gradient(to top right, var(--c-indigo-600), var(--c-purple-500), var(--c-pink-500)); border-radius: 1.25rem; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 20px rgba(236,72,153,0.3); transition: transform 0.5s; }
@@ -116,50 +91,38 @@
         @media (min-width: 640px) { .logo-title { font-size: 1.875rem; } }
         .logo-subtitle { font-size: 0.65rem; font-weight: 900; color: var(--c-pink-500); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 0.25rem; }
         
-        .cart-btn { position: relative; padding: 1rem; background: rgba(255, 255, 255, 0.8); border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); color: var(--c-indigo-900); border: 1px solid white; transition: all 0.3s; }
+        .cart-btn { position: relative; padding: 1rem; background: rgba(255, 255, 255, 0.9); border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); color: var(--c-indigo-900); border: 1px solid white; transition: all 0.3s; }
         .cart-btn:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.1); background: var(--c-pink-50); }
         .cart-badge { position: absolute; top: -0.5rem; right: -0.5rem; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 900; color: white; background: linear-gradient(to right, var(--c-pink-500), var(--c-pink-600)); border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: bounce-slow 2s infinite; }
 
-        .category-nav-bar { width: 100%; border-top: 1px solid var(--c-gray-100); background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); }
+        .category-nav-bar { width: 100%; border-top: 1px solid var(--c-gray-100); background: rgba(255, 255, 255, 0.6); }
         .category-nav-list { display: flex; gap: 1rem; overflow-x: auto; padding: 0.75rem 0; scroll-snap-type: x mandatory; }
-        .cat-nav-btn { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; padding: 0.5rem 1.25rem; border-radius: 9999px; font-weight: 700; color: var(--c-gray-500); border: 1px solid transparent; transition: all 0.3s; scroll-snap-align: center; }
+        .cat-nav-btn { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; padding: 0.5rem 1.25rem; border-radius: 9999px; font-weight: 700; color: var(--c-gray-500); border: 1px solid transparent; transition: all 0.3s; scroll-snap-align: center; font-size: 0.95rem; }
         .cat-nav-btn:hover { background: white; color: var(--c-indigo-600); box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-color: var(--c-gray-200); }
         .cat-nav-emoji { font-size: 1.25rem; }
 
-        /* MAIN APP AREA */
         .main-content { position: relative; z-index: 10; padding-top: 11rem; padding-bottom: 4rem; }
         
-        /* HERO SECTION */
-        .hero { position: relative; border-radius: 2.5rem; background: var(--c-indigo-950); margin-bottom: 4rem; overflow: hidden; box-shadow: 0 30px 60px -15px rgba(79,70,229,0.4); transition: transform 0.5s; padding: 4rem 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .hero:hover { transform: scale(1.005); }
+        .hero { position: relative; border-radius: 2.5rem; background: var(--c-indigo-950); margin-bottom: 4rem; overflow: hidden; box-shadow: 0 30px 60px -15px rgba(79,70,229,0.4); padding: 4rem 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hero-bg { position: absolute; inset: 0; background: linear-gradient(to bottom right, #312e81, #581c87, #831843); z-index: 0; }
         .hero-pattern { position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.3; z-index: 1; }
-        .hero-glow-1, .hero-glow-2 { position: absolute; border-radius: 50%; mix-blend-mode: screen; opacity: 0.5; filter: blur(60px); animation: float 6s ease-in-out infinite; z-index: 2; }
-        .hero-glow-1 { top: -5rem; right: -5rem; width: 20rem; height: 20rem; background: linear-gradient(to bottom right, var(--c-pink-500), #fb923c); }
-        .hero-glow-2 { bottom: -5rem; left: -5rem; width: 20rem; height: 20rem; background: linear-gradient(to top right, var(--c-cyan-500), #3b82f6); animation-delay: 2s; }
+        .hero-glow-1, .hero-glow-2 { position: absolute; border-radius: 50%; mix-blend-mode: screen; opacity: 0.5; filter: blur(60px); z-index: 2; }
+        .hero-glow-1 { top: -5rem; right: -5rem; width: 20rem; height: 20rem; background: linear-gradient(to bottom right, var(--c-pink-500), #fb923c); animation: float 6s ease-in-out infinite; }
+        .hero-glow-2 { bottom: -5rem; left: -5rem; width: 20rem; height: 20rem; background: linear-gradient(to top right, var(--c-cyan-500), #3b82f6); animation: float 6s ease-in-out infinite 2s; }
         
         .hero-content { position: relative; z-index: 10; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.5rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: var(--c-pink-300); font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px); margin-bottom: 2rem; box-shadow: 0 0 20px rgba(236,72,153,0.3); }
-        .hero-title { font-size: 2.5rem; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 1.5rem; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.5rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: var(--c-pink-300); font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px); margin-bottom: 2rem; }
+        .hero-title { font-size: 2.5rem; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 1.5rem; }
         @media (min-width: 768px) { .hero-title { font-size: 4.5rem; } }
         .hero-title-highlight { background: linear-gradient(to right, #f472b6, #c084fc, #22d3ee); -webkit-background-clip: text; color: transparent; animation: pulse-glow 3s infinite alternate; }
         .hero-desc { font-size: 1.125rem; color: rgba(224, 231, 255, 0.9); margin-bottom: 2.5rem; line-height: 1.6; font-weight: 500; }
-        @media (min-width: 768px) { .hero-desc { font-size: 1.5rem; } }
-        .hero-verse-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); padding: 1.25rem 2rem; border-radius: 1.5rem; display: flex; align-items: center; gap: 1.25rem; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transition: background 0.3s; }
-        .hero-verse-box:hover { background: rgba(255,255,255,0.15); }
+        .hero-verse-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); padding: 1.25rem 2rem; border-radius: 1.5rem; display: flex; align-items: center; gap: 1.25rem; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .hero-verse-icon { background: rgba(255,255,255,0.2); padding: 0.75rem; border-radius: 1rem; color: #fde047; }
         .hero-verse-text { font-size: 1.125rem; font-family: serif; font-style: italic; color: white; }
         .hero-verse-ref { font-size: 0.75rem; font-family: var(--font-sans); font-style: normal; color: var(--c-pink-300); font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; }
 
-        .emoji-float { position: absolute; font-size: 3rem; text-shadow: 0 10px 20px rgba(0,0,0,0.4); animation: float 5s ease-in-out infinite; cursor: pointer; transition: transform 0.3s; z-index: 5; }
-        .emoji-float:hover { transform: scale(1.3) !important; }
-        .emoji-1 { top: 10%; left: 5%; transform: rotate(-15deg); }
-        .emoji-2 { bottom: 10%; right: 5%; transform: rotate(15deg); animation-delay: 1.5s; }
-        @media (min-width: 768px) { .emoji-float { font-size: 5rem; } .emoji-1 { top: 15%; left: 10%; } .emoji-2 { bottom: 15%; right: 10%; } }
-
-        /* FILTERS */
-        .filters-bar { display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1.5rem; background: rgba(255,255,255,0.6); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 2.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid white; margin-bottom: 4rem; }
-        @media (min-width: 768px) { .filters-bar { flex-direction: row; padding: 1.25rem 2rem; } }
+        .filters-bar { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 2.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid white; margin-bottom: 4rem; }
+        @media (min-width: 768px) { .filters-bar { flex-direction: row; justify-content: space-between; padding: 1.25rem 2rem; } }
         .filters-title { font-size: 1.25rem; font-weight: 900; color: var(--c-indigo-900); display: flex; align-items: center; gap: 0.75rem; }
         .filters-icon { background: var(--c-pink-100); color: var(--c-pink-600); padding: 0.5rem; border-radius: 0.75rem; display: flex; }
         .filters-list { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
@@ -167,11 +130,9 @@
         .filter-btn:hover { background: var(--c-gray-50); }
         .filter-btn.active { background: var(--c-indigo-950); color: white; border-color: var(--c-indigo-950); box-shadow: 0 10px 20px rgba(30,27,75,0.3); transform: scale(1.05); }
 
-        /* PRODUCT SECTIONS */
         .category-section { scroll-margin-top: 12rem; margin-bottom: 6rem; }
-        .category-header { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; background: rgba(255,255,255,0.5); padding: 2rem; border-radius: 2.5rem; border: 1px solid white; backdrop-filter: blur(12px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
+        .category-header { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; background: rgba(255,255,255,0.6); padding: 2rem; border-radius: 2.5rem; border: 1px solid white; backdrop-filter: blur(12px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
         @media (min-width: 768px) { .category-header { flex-direction: row; } }
-        .category-bg-decor { position: absolute; right: 0; top: 0; width: 16rem; height: 16rem; background: linear-gradient(to bottom right, var(--c-pink-100), transparent); border-radius: 50%; mix-blend-mode: multiply; opacity: 0.5; transform: translate(50%, -50%); pointer-events: none; }
         .category-emoji { font-size: 3.5rem; background: white; padding: 1.25rem; border-radius: 1.5rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: transform 0.5s; position: relative; z-index: 2; }
         .category-header:hover .category-emoji { transform: scale(1.1) rotate(10deg); }
         .category-info { text-align: center; position: relative; z-index: 2; }
@@ -184,216 +145,180 @@
         @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1280px) { .products-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        /* PRODUCT CARDS */
-        .card { background: white; border-radius: 2.5rem; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: all 0.4s ease; display: flex; flex-direction: column; border: 1px solid var(--c-gray-100); height: 100%; position: relative; z-index: 10; }
-        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
+        .card { background: white; border-radius: 2.5rem; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: all 0.4s ease; display: flex; flex-direction: column; border: 1px solid var(--c-gray-100); position: relative; z-index: 10; height: 100%; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
         .card-img-container { position: relative; height: 16rem; overflow: hidden; background: var(--c-gray-100); }
         .card-img-overlay { position: absolute; inset: 0; opacity: 0.4; mix-blend-mode: multiply; transition: opacity 0.5s; z-index: 1; }
         .card:hover .card-img-overlay { opacity: 0.2; }
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; position: relative; z-index: 0; }
         .card:hover .card-img { transform: scale(1.1); }
-        .card-gender-badge { position: absolute; top: 1.25rem; left: 1.25rem; z-index: 2; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); padding: 0.5rem 1rem; border-radius: 1rem; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: var(--c-indigo-900); display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .card-gender-badge { position: absolute; top: 1.25rem; left: 1.25rem; z-index: 2; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); padding: 0.5rem 1rem; border-radius: 1rem; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: var(--c-indigo-900); display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .badge-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; }
         
-        .card-body { padding: 2rem; display: flex; flex-direction: column; flex-grow: 1; position: relative; z-index: 3; background: white; }
-        .card-title { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-950); margin-bottom: 0.75rem; line-height: 1.2; transition: color 0.3s; }
-        .card:hover .card-title { color: var(--c-pink-600); }
-        .card-desc { font-size: 0.875rem; color: var(--c-gray-500); font-weight: 500; margin-bottom: 1.5rem; line-height: 1.6; flex-grow: 1; }
-        .card-verse-box { background: var(--c-gray-50); padding: 1.25rem; border-radius: 1.5rem; border: 1px solid var(--c-gray-100); position: relative; overflow: hidden; margin-bottom: 1.5rem; transition: background 0.3s; }
-        .card:hover .card-verse-box { background: var(--c-indigo-50); border-color: var(--c-indigo-100); }
+        .card-body { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; position: relative; z-index: 3; background: white; }
+        .card-title { font-size: 1.35rem; font-weight: 900; color: var(--c-indigo-950); margin-bottom: 0.5rem; line-height: 1.2; }
+        .card-desc { font-size: 0.875rem; color: var(--c-gray-500); font-weight: 500; margin-bottom: 1.25rem; line-height: 1.6; flex-grow: 1; }
+        .card-verse-box { background: var(--c-gray-50); padding: 1rem; border-radius: 1.25rem; border: 1px solid var(--c-gray-100); position: relative; overflow: hidden; margin-bottom: 1.5rem; }
         .card-verse-border { position: absolute; left: 0; top: 0; width: 0.375rem; height: 100%; }
-        .card-verse-text { font-size: 0.875rem; font-family: serif; font-style: italic; color: var(--c-gray-700); font-weight: 500; padding-left: 0.5rem; line-height: 1.5; }
+        .card-verse-text { font-size: 0.85rem; font-family: serif; font-style: italic; color: var(--c-gray-700); font-weight: 500; padding-left: 0.5rem; line-height: 1.5; }
         
         .btn-action { width: 100%; padding: 1rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s ease; }
-        
         .btn-add { background: var(--c-indigo-950); color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
         .btn-add::after { content: ''; position: absolute; top: 0; left: -150%; width: 70%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); transition: all 0.6s ease; z-index: 10; }
         .btn-add:hover { background: linear-gradient(to right, var(--c-pink-500), var(--c-purple-600)); box-shadow: 0 15px 30px rgba(236,72,153,0.3); transform: translateY(-3px); }
         .btn-add:hover::after { left: 200%; }
-        
         .btn-equipped { background: #ecfdf5; color: #059669; border: 2px solid #a7f3d0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* CART SIDEBAR */
         .cart-overlay { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
         .cart-backdrop { position: absolute; inset: 0; background: rgba(30,27,75,0.4); backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
-        .cart-panel { position: absolute; right: 0; top: 0; width: 100%; max-width: 28rem; height: 100%; background: var(--c-gray-50); box-shadow: -20px 0 50px rgba(0,0,0,0.2); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-top-left-radius: 2.5rem; border-bottom-left-radius: 2.5rem; pointer-events: auto; }
+        .cart-panel { position: absolute; right: 0; top: 0; width: 100%; max-width: 26rem; height: 100%; background: var(--c-gray-50); box-shadow: -20px 0 50px rgba(0,0,0,0.2); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-top-left-radius: 2.5rem; border-bottom-left-radius: 2.5rem; pointer-events: auto; }
         
         .cart-open .cart-backdrop { opacity: 1; pointer-events: auto; }
         .cart-open .cart-panel { transform: translateX(0); }
 
-        .cart-header { padding: 2rem; background: white; border-bottom: 1px solid var(--c-gray-100); border-top-left-radius: 2.5rem; z-index: 10; }
-        .cart-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .cart-title { font-size: 1.875rem; font-weight: 900; color: var(--c-indigo-950); display: flex; align-items: center; gap: 0.75rem; }
-        .cart-icon-bg { background: var(--c-pink-100); padding: 0.75rem; border-radius: 1rem; color: var(--c-pink-500); }
-        .btn-close { padding: 0.75rem; background: var(--c-gray-50); color: var(--c-gray-500); border-radius: 1rem; transition: background 0.3s; }
+        .cart-header { padding: 1.5rem; background: white; border-bottom: 1px solid var(--c-gray-100); border-top-left-radius: 2.5rem; }
+        .cart-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+        .cart-title { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-950); display: flex; align-items: center; gap: 0.75rem; }
+        .cart-icon-bg { background: var(--c-pink-100); padding: 0.5rem; border-radius: 1rem; color: var(--c-pink-500); }
+        .btn-close { padding: 0.5rem; background: var(--c-gray-100); color: var(--c-gray-500); border-radius: 1rem; transition: background 0.3s; }
         .btn-close:hover { background: var(--c-gray-200); color: var(--c-gray-800); }
         
-        .progress-box { background: var(--c-indigo-50); padding: 1.25rem; border-radius: 1.5rem; border: 1px solid var(--c-indigo-100); }
-        .progress-labels { display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 700; margin-bottom: 0.75rem; }
-        .progress-track { width: 100%; height: 1rem; background: var(--c-indigo-100); border-radius: 9999px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .progress-box { background: var(--c-indigo-50); padding: 1rem; border-radius: 1.25rem; border: 1px solid var(--c-indigo-100); }
+        .progress-labels { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .progress-track { width: 100%; height: 0.75rem; background: var(--c-indigo-100); border-radius: 9999px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         .progress-fill { height: 100%; background: linear-gradient(to right, var(--c-pink-400), var(--c-purple-400), var(--c-indigo-500)); transition: width 1s ease-in-out; position: relative; }
-        .progress-pattern { position: absolute; inset: 0; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBsNDAtNDBIMHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4yKSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+'); opacity: 0.5; }
-        .progress-success { font-size: 0.875rem; color: var(--c-indigo-600); font-weight: 700; text-align: center; margin-top: 0.75rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+        .progress-success { font-size: 0.8rem; color: var(--c-indigo-600); font-weight: 700; text-align: center; margin-top: 0.5rem; display: flex; justify-content: center; align-items: center; gap: 0.25rem; }
 
-        .cart-items-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
-        .empty-cart { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.6; padding: 2rem; gap: 1.5rem; }
-        .empty-cart svg { width: 6rem; height: 6rem; color: var(--c-indigo-200); }
-        .empty-cart h3 { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-900); }
+        .cart-items-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        .empty-cart { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.6; gap: 1rem; }
+        .empty-cart svg { width: 5rem; height: 5rem; color: var(--c-indigo-200); }
+        .empty-cart h3 { font-size: 1.25rem; font-weight: 900; color: var(--c-indigo-900); }
         .empty-cart p { font-size: 0.875rem; color: var(--c-gray-500); max-width: 15rem; line-height: 1.5; }
 
-        .cart-item { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.75rem; border-radius: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid var(--c-gray-100); transition: box-shadow 0.3s; }
-        .cart-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .cart-item-img-box { width: 5rem; height: 5rem; border-radius: 1rem; overflow: hidden; position: relative; flex-shrink: 0; }
-        .cart-item-overlay { position: absolute; inset: 0; opacity: 0.4; mix-blend-mode: multiply; z-index: 1; }
+        .cart-item { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.75rem; border-radius: 1.25rem; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid var(--c-gray-100); }
+        .cart-item-img-box { width: 4.5rem; height: 4.5rem; border-radius: 0.75rem; overflow: hidden; position: relative; flex-shrink: 0; }
+        .cart-item-overlay { position: absolute; inset: 0; opacity: 0.3; mix-blend-mode: multiply; z-index: 1; }
         .cart-item-img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 0; }
         .cart-item-info { flex: 1; }
-        .cart-item-cat { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; color: var(--c-pink-500); letter-spacing: 0.1em; background: var(--c-pink-50); padding: 0.25rem 0.5rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 0.25rem; }
+        .cart-item-cat { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; color: var(--c-pink-500); background: var(--c-pink-50); padding: 0.2rem 0.4rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 0.25rem; }
         .cart-item-title { font-size: 0.875rem; font-weight: 700; color: var(--c-indigo-950); line-height: 1.2; }
-        .btn-remove { padding: 0.75rem; background: #fef2f2; color: #f87171; border-radius: 1rem; transition: all 0.3s; margin-right: 0.5rem; }
+        .btn-remove { padding: 0.5rem; background: #fef2f2; color: #f87171; border-radius: 0.75rem; transition: all 0.3s; }
         .btn-remove:hover { background: #ef4444; color: white; }
 
-        .cart-footer { padding: 2rem; background: white; border-top: 1px solid var(--c-gray-100); border-bottom-left-radius: 2.5rem; z-index: 10; box-shadow: 0 -10px 30px rgba(0,0,0,0.03); }
-        .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .cart-total-label { color: var(--c-gray-500); font-weight: 700; font-size: 1.125rem; }
-        .cart-total-val { font-size: 2.25rem; font-weight: 900; color: var(--c-indigo-900); }
-        .btn-checkout { width: 100%; padding: 1.25rem; border-radius: 1.5rem; font-size: 1.25rem; font-weight: 900; background: linear-gradient(to right, var(--c-indigo-600), var(--c-purple-600)); color: white; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s; box-shadow: 0 10px 20px rgba(79,70,229,0.2); }
-        .btn-checkout:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(79,70,229,0.3); }
-        .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .cart-footer { padding: 1.5rem; background: white; border-top: 1px solid var(--c-gray-100); border-bottom-left-radius: 2.5rem; }
+        .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .cart-total-label { color: var(--c-gray-500); font-weight: 700; font-size: 1rem; }
+        .cart-total-val { font-size: 2rem; font-weight: 900; color: var(--c-indigo-900); }
+        .btn-checkout { width: 100%; padding: 1.25rem; border-radius: 1.25rem; font-size: 1.125rem; font-weight: 900; background: linear-gradient(to right, var(--c-indigo-600), var(--c-purple-600)); color: white; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s; }
+        .btn-checkout:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(79,70,229,0.3); }
+        .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* TOAST */
-        .toast { position: fixed; bottom: 2.5rem; left: 50%; display: flex; align-items: center; gap: 1rem; background: rgba(30,27,75,0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 1rem 2rem; border-radius: 9999px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-weight: 700; z-index: 100; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .toast { position: fixed; bottom: 2rem; left: 50%; display: flex; align-items: center; gap: 1rem; background: rgba(30,27,75,0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 1rem 1.5rem; border-radius: 9999px; box-shadow: 0 15px 30px rgba(0,0,0,0.4); font-weight: 700; font-size: 0.9rem; z-index: 100; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .toast.visible { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
-        .toast.hidden-state { transform: translate(-50%, 100px); opacity: 0; pointer-events: none; }
-        .toast-icon { background: var(--c-pink-500); border-radius: 50%; padding: 0.375rem; box-shadow: 0 0 10px rgba(236,72,153,0.5); display: flex; }
+        .toast.hidden-state { transform: translate(-50%, 50px); opacity: 0; pointer-events: none; }
+        .toast-icon { background: var(--c-pink-500); border-radius: 50%; padding: 0.25rem; display: flex; }
 
-        /* MODAL */
         .modal-wrap { position: fixed; inset: 0; z-index: 60; display: flex; justify-content: center; align-items: center; padding: 1rem; transition: all 0.4s; pointer-events: none; opacity: 0; }
         .modal-wrap.visible { opacity: 1; pointer-events: auto; }
-        .modal-bg { position: absolute; inset: 0; background: rgba(30,27,75,0.6); backdrop-filter: blur(12px); }
-        .modal-content { position: relative; background: white; border-radius: 2.5rem; padding: 2.5rem; max-width: 36rem; width: 100%; text-align: center; box-shadow: 0 0 60px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.4s; overflow: hidden; z-index: 10; }
-        @media (min-width: 768px) { .modal-content { padding: 3.5rem; } }
+        .modal-bg { position: absolute; inset: 0; background: rgba(30,27,75,0.6); backdrop-filter: blur(8px); }
+        .modal-content { position: relative; background: white; border-radius: 2rem; padding: 2rem; max-width: 32rem; width: 100%; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.4s; overflow: hidden; z-index: 10; }
         .modal-wrap.visible .modal-content { transform: scale(1); }
-        .modal-decor { position: absolute; top: -5rem; right: -5rem; width: 16rem; height: 16rem; background: var(--c-pink-100); border-radius: 50%; filter: blur(40px); mix-blend-mode: multiply; opacity: 0.7; z-index: 0; }
         
-        .modal-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+        .modal-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+        .spinner-box { position: relative; width: 6rem; height: 6rem; display: flex; align-items: center; justify-content: center; }
+        .spinner-ring { position: absolute; inset: 0; border: 6px solid var(--c-gray-100); border-top-color: var(--c-pink-500); border-radius: 50%; animation: spin 1s linear infinite; }
         
-        /* Loading Spinner */
-        .spinner-box { position: relative; width: 8rem; height: 8rem; display: flex; align-items: center; justify-content: center; }
-        .spinner-ring { position: absolute; inset: 0; border: 8px solid var(--c-gray-100); border-top-color: var(--c-pink-500); border-radius: 50%; animation: spin 1s linear infinite; }
-        .spinner-icon { color: var(--c-pink-500); animation: pulse-glow 2s infinite; }
+        .success-box { width: 6rem; height: 6rem; background: linear-gradient(to top right, #34d399, #10b981); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 20px rgba(16,185,129,0.3); color: white; margin-bottom: 0.5rem; }
+        .modal-title { font-size: 2rem; font-weight: 900; color: var(--c-indigo-950); margin-bottom: 0.25rem; }
+        .modal-desc { font-size: 1rem; color: var(--c-gray-500); font-weight: 500; }
         
-        /* Success check */
-        .success-box { width: 8rem; height: 8rem; background: linear-gradient(to top right, #34d399, #10b981); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(16,185,129,0.3); animation: bounce-slow 3s infinite; color: white; }
+        .receipt-summary { width: 100%; background: var(--c-gray-50); padding: 1.25rem; border-radius: 1.25rem; border: 1px solid var(--c-gray-100); position: relative; overflow: hidden; margin: 1rem 0; text-align: left; }
+        .receipt-bar { position: absolute; left: 0; top: 0; width: 0.375rem; height: 100%; background: linear-gradient(to bottom, var(--c-pink-400), var(--c-indigo-500)); }
+        .receipt-label { font-size: 0.7rem; font-weight: 900; color: var(--c-gray-400); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; display: block; }
+        .receipt-val { font-size: 1.25rem; font-weight: 900; color: var(--c-indigo-900); }
         
-        .modal-title { font-size: 2.25rem; font-weight: 900; color: var(--c-indigo-950); margin-bottom: 0.5rem; }
-        .modal-desc { font-size: 1.125rem; color: var(--c-gray-500); font-weight: 500; }
-        
-        .receipt-summary { width: 100%; background: var(--c-gray-50); padding: 1.5rem; border-radius: 1.5rem; border: 1px solid var(--c-gray-100); position: relative; overflow: hidden; margin: 1rem 0; text-align: left; }
-        .receipt-bar { position: absolute; left: 0; top: 0; width: 0.5rem; height: 100%; background: linear-gradient(to bottom, var(--c-pink-400), var(--c-indigo-500)); }
-        .receipt-label { font-size: 0.75rem; font-weight: 900; color: var(--c-gray-400); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block; }
-        .receipt-val { font-size: 1.5rem; font-weight: 900; color: var(--c-indigo-900); }
-        .receipt-pay { font-size: 1rem; color: var(--c-gray-500); margin-top: 0.5rem; }
-        .pay-badge { font-weight: 900; color: var(--c-pink-500); background: var(--c-pink-50); padding: 0.25rem 0.75rem; border-radius: 9999px; margin-left: 0.5rem; }
+        .btn-download { width: 100%; padding: 1rem; border-radius: 1.25rem; font-size: 1rem; font-weight: 900; background: var(--c-indigo-950); color: white; display: flex; justify-content: center; align-items: center; gap: 0.5rem; transition: all 0.3s; }
+        .btn-download:hover { background: var(--c-indigo-900); transform: translateY(-2px); }
+        .btn-text-close { padding: 0.75rem; color: var(--c-gray-400); font-weight: 700; margin-top: 0.5rem; width: 100%; }
 
-        .btn-download { width: 100%; padding: 1.25rem; border-radius: 1.5rem; font-size: 1.125rem; font-weight: 900; background: var(--c-indigo-950); color: white; display: flex; justify-content: center; align-items: center; gap: 0.75rem; transition: all 0.3s; }
-        .btn-download:hover { background: var(--c-indigo-900); box-shadow: 0 15px 30px rgba(30,27,75,0.4); transform: translateY(-2px); }
-        .btn-text-close { padding: 0.75rem; color: var(--c-gray-400); font-weight: 700; transition: color 0.3s; width: 100%; margin-top: 0.5rem; }
-        .btn-text-close:hover { color: var(--c-gray-800); }
-
-        /* PRINT RECEIPT VIEW */
         .receipt-view-container { 
-            display: none; 
-            background: white; 
-            padding: 3rem; /* Aumentado padding general */
-            width: 800px; /* Ancho fijo forzado para el render */
-            margin: 0 auto; 
-            border: 8px solid var(--c-indigo-900); 
-            border-radius: 1rem; 
-            position: relative; /* Cambiado a absolute/fixed durante el render por js */
-            z-index: 9999;
-            box-sizing: border-box; /* Asegurar que el width incluye padding */
+            display: none; /* Oculto por defecto en la app */
         }
         
-        /* Clase activa para cuando se va a imprimir */
         .receipt-view-container.active { 
+            /* Se vuelve un bloque estándar en el flujo normal para que html2canvas lo capture 100% perfecto */
             display: block; 
-            position: absolute; /* Extraer del flujo para evitar reflows del main-app */
-            top: 0;
-            left: 0;
-            min-height: 100vh;
+            width: 700px !important; /* Ancho fijo seguro para encajar en hoja A4 */
+            max-width: 700px !important;
+            margin: 0 !important; /* CRUCIAL: Al quitar el "auto", evitamos que pantallas pequeñas lo empujen a coordenadas negativas en la izquierda */
+            background: #ffffff !important; 
+            padding: 40px 50px !important; /* Más espacio interno en todos los lados */
+            border: none; /* Borde eliminado para evitar recortes */
+            color: #000;
+            box-sizing: border-box;
         }
 
-        .receipt-decor-top { position: absolute; top: 0; right: 0; width: 8rem; height: 8rem; background: var(--c-pink-100); border-bottom-left-radius: 100%; z-index: 0; opacity: 0.5; }
-        .receipt-decor-bottom { position: absolute; bottom: 0; left: 0; width: 8rem; height: 8rem; background: var(--c-cyan-100); border-top-right-radius: 100%; z-index: 0; opacity: 0.5; }
+        .receipt-header-print { text-align: center; border-bottom: 2px solid var(--c-indigo-900); padding-bottom: 20px; margin-bottom: 20px; }
+        .receipt-title-print { font-size: 40px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--c-indigo-900); font-family: var(--font-display); line-height: 1.2; margin: 0; }
+        .receipt-sub-print { font-size: 24px; font-family: serif; font-style: italic; color: var(--c-pink-600); margin: 5px 0 0 0; }
+        .receipt-date-print { color: var(--c-gray-500); font-weight: 600; margin-top: 10px; font-size: 14px; }
         
-        .receipt-header-print { text-align: center; border-bottom: 4px solid var(--c-indigo-900); padding-bottom: 1.5rem; margin-bottom: 2rem; position: relative; z-index: 1; }
-        .receipt-title-print { font-size: 3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-indigo-900); font-family: var(--font-display); line-height: 1.2; }
-        .receipt-sub-print { font-size: 1.5rem; font-family: serif; font-style: italic; color: var(--c-pink-600); margin-top: 0.5rem; }
-        .receipt-date-print { color: var(--c-gray-500); font-weight: 500; margin-top: 0.5rem; }
-        .receipt-msg { font-size: 1.25rem; text-align: center; font-weight: 700; color: var(--c-gray-700); margin-bottom: 2rem; position: relative; z-index: 1; }
+        .receipt-msg { font-size: 18px; text-align: center; font-weight: 700; color: var(--c-gray-700); margin-bottom: 25px; }
         
-        /* Contenedor de items para PDF */
+        /* Contenedor e Items del PDF (Evitando cortes de página) */
         #receipt-items {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 15px;
+            padding-left: 5px; /* Pequeño margen extra por seguridad */
         }
 
         .pdf-item { 
-            page-break-inside: avoid; /* CRUCIAL: Evitar cortes dentro del item */
-            break-inside: avoid-page; /* CRUCIAL: Evitar cortes dentro del item */
-            border-left: 4px solid var(--c-pink-400); 
-            padding: 1rem 1.5rem; 
+            page-break-inside: avoid; /* CRUCIAL: Evitar cortes horizontales entre páginas */
+            break-inside: avoid; /* CRUCIAL */
+            border-left: 6px solid var(--c-pink-400); 
+            padding: 15px 25px; /* Más padding a la izquierda para alejar el texto del borde */
             background: var(--c-gray-50); 
-            border-radius: 0 0.75rem 0.75rem 0; 
-            position: relative; 
-            z-index: 1;
-            /* Asegurar que es un bloque claro para el motor de render */
-            display: block; 
-            width: 100%;
-            box-sizing: border-box;
+            border-radius: 0 10px 10px 0;
+            display: block;
+            word-wrap: break-word; /* Evitar que textos largos empujen el ancho */
+            overflow-wrap: break-word;
         }
-        .pdf-item-title { font-size: 1.25rem; font-weight: 900; color: var(--c-indigo-900); font-family: var(--font-display); margin-bottom: 0.25rem; }
-        .pdf-item-desc { color: var(--c-gray-600); font-size: 0.875rem; margin-bottom: 0.5rem; line-height: 1.4; }
-        .pdf-item-verse { font-family: serif; font-style: italic; color: var(--c-gray-800); font-weight: 600; font-size: 0.95rem; }
+        .pdf-item-title { font-size: 18px; font-weight: 900; color: var(--c-indigo-900); font-family: var(--font-display); margin: 0 0 5px 0; }
+        .pdf-item-desc { color: var(--c-gray-600); font-size: 14px; margin: 0 0 10px 0; line-height: 1.4; }
+        .pdf-item-verse { font-family: serif; font-style: italic; color: var(--c-gray-800); font-weight: 600; font-size: 15px; margin: 0; }
         
         .receipt-footer-print { 
-            margin-top: 2rem; 
+            margin-top: 30px; 
             text-align: center; 
             border-top: 2px dashed var(--c-gray-400); 
-            padding-top: 2rem; 
-            position: relative; 
-            z-index: 1; 
+            padding-top: 25px; 
             page-break-inside: avoid; /* Mantener el footer junto */
-            break-inside: avoid-page;
+            break-inside: avoid;
         }
-        .receipt-total-items { font-weight: 900; font-size: 1.5rem; color: var(--c-indigo-900); }
-        .receipt-total-pay { font-weight: 700; font-size: 1.125rem; margin-top: 0.5rem; }
-        .receipt-pay-hl { color: var(--c-pink-500); }
-        .receipt-pay-method { color: var(--c-gray-600); margin-top: 0.25rem; }
-        .receipt-quote { margin-top: 2rem; font-family: serif; font-style: italic; font-size: 1.25rem; color: var(--c-gray-500); }
+        .receipt-total-items { font-weight: 900; font-size: 22px; color: var(--c-indigo-900); margin: 0; }
+        .receipt-pay-method { color: var(--c-gray-600); font-size: 16px; margin: 10px 0; font-weight: bold; }
+        .receipt-quote { margin-top: 20px; font-family: serif; font-style: italic; font-size: 18px; color: var(--c-gray-500); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- RECIBO PARA IMPRIMIR (Oculto por defecto) -->
+    <!-- RECIBO PARA IMPRIMIR (Contenedor Seguro para html2canvas) -->
     <div id="receipt-view" class="receipt-view-container">
-        <div class="receipt-decor-top"></div>
-        <div class="receipt-decor-bottom"></div>
-        
         <div class="receipt-header-print">
             <h1 class="receipt-title-print">Cibercolegio UCN</h1>
             <h2 class="receipt-sub-print">Recibo: Outfit del Alma</h2>
             <p class="receipt-date-print" id="receipt-date"></p>
         </div>
         <p class="receipt-msg">¡Felicidades! Has decidido revestirte de las mejores actitudes hoy.</p>
+        
         <div id="receipt-items">
             <!-- Items del recibo inyectados aquí -->
         </div>
+        
         <div class="receipt-footer-print">
             <p class="receipt-total-items">Total de prendas: <span id="receipt-count">0</span></p>
-            <p class="receipt-total-pay">Total a pagar: <span class="receipt-pay-hl">0 Monedas</span></p>
-            <p class="receipt-pay-method">Pagado con: Voluntad, Esfuerzo y Fe</p>
+            <p class="receipt-pay-method">Pagado con: Voluntad, Esfuerzo y Fe 💖</p>
             <p class="receipt-quote">📖 “Revístanse del Señor Jesucristo.” (Romanos 13,14)</p>
         </div>
     </div>
@@ -413,7 +338,7 @@
             <div class="container nav-inner">
                 <div class="logo-group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
                     <div class="logo-icon-wrapper">
-                        <i data-lucide="sparkles" class="logo-icon" style="animation: pulse-glow 2s infinite"></i>
+                        <i data-lucide="sparkles" style="animation: pulse-glow 2s infinite"></i>
                     </div>
                     <div>
                         <h1 class="logo-title">Cibercolegio <span style="font-weight: 300; color: var(--c-pink-500);">UCN</span></h1>
@@ -468,10 +393,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Floating Emojis -->
-                <div class="emoji-float emoji-1">💖</div>
-                <div class="emoji-float emoji-2">✨</div>
             </div>
 
             <!-- FILTERS -->
@@ -499,7 +420,7 @@
                 <div class="cart-header">
                     <div class="cart-header-top">
                         <h2 class="cart-title font-display">
-                            <div class="cart-icon-bg"><i data-lucide="shopping-bag" style="width: 1.5rem; height: 1.5rem;"></i></div>
+                            <div class="cart-icon-bg"><i data-lucide="shopping-bag" style="width: 1.25rem; height: 1.25rem;"></i></div>
                             Mi Outfit
                         </h2>
                         <button onclick="toggleCart(false)" class="btn-close">
@@ -510,12 +431,10 @@
                     <div class="progress-box">
                         <div class="progress-labels">
                             <span style="color: var(--c-indigo-900);">Progreso de categorías</span>
-                            <span id="progress-text" style="color: var(--c-pink-600);">0/5 Completadas</span>
+                            <span id="progress-text" style="color: var(--c-pink-600);">0/5</span>
                         </div>
                         <div class="progress-track">
-                            <div id="progress-bar" class="progress-fill" style="width: 0%">
-                                <div class="progress-pattern"></div>
-                            </div>
+                            <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
                         </div>
                         <p id="progress-complete" class="progress-success hidden">
                             <i data-lucide="check-circle-2" style="width: 1rem; height: 1rem; color: #10b981;"></i> ¡Tienes un outfit completo!
@@ -543,14 +462,12 @@
         <div id="checkout-modal" class="modal-wrap">
             <div class="modal-bg" onclick="cerrarModalCheckout()"></div>
             
-            <div class="modal-content" id="checkout-content-container">
-                <div class="modal-decor"></div>
-                
+            <div class="modal-content">
                 <!-- State 1: Processing -->
                 <div id="checkout-processing" class="modal-inner">
                     <div class="spinner-box">
                         <div class="spinner-ring"></div>
-                        <i data-lucide="heart" class="spinner-icon" style="width: 2.5rem; height: 2.5rem;"></i>
+                        <i data-lucide="heart" style="color: var(--c-pink-500); width: 2.5rem; height: 2.5rem; animation: pulse-glow 2s infinite;"></i>
                     </div>
                     <div>
                         <h3 class="modal-title font-display">Tejiendo tu Outfit...</h3>
@@ -561,18 +478,17 @@
                 <!-- State 2: Success -->
                 <div id="checkout-success" class="modal-inner hidden">
                     <div class="success-box">
-                        <i data-lucide="check" style="width: 4rem; height: 4rem; stroke-width: 3;"></i>
+                        <i data-lucide="check" style="width: 3rem; height: 3rem; stroke-width: 3;"></i>
                     </div>
                     <div>
-                        <h3 class="modal-title font-display" style="font-size: 2.5rem;">¡Alma Revestida!</h3>
-                        <p class="modal-desc">Tu Outfit del Alma está listo. Ya estás preparado para enfrentar el día de la mejor manera.</p>
+                        <h3 class="modal-title font-display" style="font-size: 2.25rem;">¡Alma Revestida!</h3>
+                        <p class="modal-desc">Tu Outfit del Alma está listo para hoy.</p>
                     </div>
                     
                     <div class="receipt-summary">
                         <div class="receipt-bar"></div>
                         <span class="receipt-label">Resumen de Inversión</span>
                         <p class="receipt-val"><span id="checkout-count">0</span> prendas adquiridas</p>
-                        <p class="receipt-pay">Pagado con: <span class="pay-badge">Voluntad y Fe</span></p>
                     </div>
 
                     <button onclick="handlePrint()" class="btn-download" id="btn-download">
@@ -590,7 +506,7 @@
             <div class="toast-icon">
                 <i data-lucide="check" style="width: 1.25rem; height: 1.25rem; stroke-width: 3;"></i>
             </div>
-            <span id="toast-message">Mensaje de prueba</span>
+            <span id="toast-message">Mensaje</span>
         </div>
     </div>
 
@@ -659,14 +575,11 @@
                 const playTone = (freq, startTime, duration, type='sine') => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-                    osc.type = type;
-                    osc.frequency.value = freq;
+                    osc.type = type; osc.frequency.value = freq;
                     gain.gain.setValueAtTime(0.05, startTime);
                     gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(startTime);
-                    osc.stop(startTime + duration);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(startTime); osc.stop(startTime + duration);
                 };
                 playTone(523.25, now, 0.4); 
                 playTone(659.25, now + 0.1, 0.4); 
@@ -678,17 +591,13 @@
         function playPop() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.1);
                 gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
             } catch(e) {}
         }
 
@@ -735,7 +644,6 @@
                 let sectionHTML = `
                     <section id="${category.id}" class="category-section">
                         <div class="category-header">
-                            <div class="category-bg-decor"></div>
                             <div class="category-emoji">${category.emoji}</div>
                             <div class="category-info">
                                 <h2 class="category-title font-display">${category.name}</h2>
@@ -758,7 +666,7 @@
                         <div class="card">
                             <div class="card-img-container">
                                 <div class="card-img-overlay" style="background: ${product.color}"></div>
-                                <img src="${product.img}" alt="${product.name}" class="card-img" onerror="this.src='https://placehold.co/400x400/f3f4f6/a8a29e?text=Imagen+no+disponible'" />
+                                <img src="${product.img}" alt="${product.name}" class="card-img" loading="lazy" />
                                 <div class="card-gender-badge">
                                     <span class="badge-dot" style="background-color: ${dotColor}"></span> ${product.gender}
                                 </div>
@@ -780,27 +688,18 @@
                         </div>
                     `;
                 });
-
                 sectionHTML += `</div></section>`;
                 container.innerHTML += sectionHTML;
             });
-            
             lucide.createIcons();
         }
 
-        function setFilter(f) {
-            playPop();
-            currentFilter = f;
-            renderFilterButtons();
-            renderProducts();
-        }
-
+        function setFilter(f) { playPop(); currentFilter = f; renderFilterButtons(); renderProducts(); }
         function scrollToSection(id) {
             playPop();
             const element = document.getElementById(id);
             if (element) {
-                const yOffset = -150; 
-                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                const y = element.getBoundingClientRect().top + window.pageYOffset - 150;
                 window.scrollTo({ top: y, behavior: 'smooth' });
             }
         }
@@ -811,38 +710,22 @@
             if (!cart.find(item => item.id === id)) {
                 cart.push(product);
                 showToast(`¡Añadiste "${product.name}" a tu alma!`);
-                updateCartUI();
-                renderProducts(); 
-            } else {
-                showToast(`Ya tienes "${product.name}" en tu outfit.`);
+                updateCartUI(); renderProducts(); 
             }
         }
-
-        function removeFromCart(id) {
-            playPop();
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-            renderProducts(); 
-        }
-
+        function removeFromCart(id) { playPop(); cart = cart.filter(item => item.id !== id); updateCartUI(); renderProducts(); }
+        
         function toggleCart(isOpen) {
             playPop();
             const container = document.getElementById('cart-container');
-            if (isOpen) {
-                container.classList.add('cart-open');
-            } else {
-                container.classList.remove('cart-open');
-            }
+            if (isOpen) container.classList.add('cart-open');
+            else container.classList.remove('cart-open');
         }
 
         function updateCartUI() {
             const badge = document.getElementById('cart-badge');
-            if (cart.length > 0) {
-                badge.innerText = cart.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            if (cart.length > 0) { badge.innerText = cart.length; badge.classList.remove('hidden'); } 
+            else { badge.classList.add('hidden'); }
             
             document.getElementById('cart-total-footer').innerText = cart.length;
             document.getElementById('checkout-btn').disabled = cart.length === 0;
@@ -850,13 +733,9 @@
             const categoriesInCart = new Set(cart.map(item => item.category)).size;
             const progress = (categoriesInCart / 5) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('progress-text').innerText = `${categoriesInCart}/5 Completadas`;
-            
-            if (progress === 100) {
-                document.getElementById('progress-complete').classList.remove('hidden');
-            } else {
-                document.getElementById('progress-complete').classList.add('hidden');
-            }
+            document.getElementById('progress-text').innerText = `${categoriesInCart}/5`;
+            if (progress === 100) document.getElementById('progress-complete').classList.remove('hidden');
+            else document.getElementById('progress-complete').classList.add('hidden');
 
             const listContainer = document.getElementById('cart-items');
             if (cart.length === 0) {
@@ -872,7 +751,7 @@
                     <div class="cart-item">
                         <div class="cart-item-img-box">
                             <div class="cart-item-overlay" style="background: ${item.color}"></div>
-                            <img src="${item.img}" alt="${item.name}" class="cart-item-img" onerror="this.src='https://placehold.co/400x400/f3f4f6/a8a29e?text=No+Img'" />
+                            <img src="${item.img}" alt="${item.name}" class="cart-item-img" />
                         </div>
                         <div class="cart-item-info">
                             <span class="cart-item-cat">${item.category}</span>
@@ -891,44 +770,30 @@
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').innerText = msg;
-            
-            toast.classList.remove('toast-hidden-state');
-            toast.classList.add('visible');
-            
+            toast.classList.remove('toast-hidden-state'); toast.classList.add('visible');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('visible');
-                toast.classList.add('toast-hidden-state');
-            }, 3000);
+            toastTimeout = setTimeout(() => { toast.classList.remove('visible'); toast.classList.add('toast-hidden-state'); }, 3000);
         }
 
         function iniciarCompra() {
-            playMagicChime();
-            toggleCart(false);
+            playMagicChime(); toggleCart(false);
             const modal = document.getElementById('checkout-modal');
-            const processing = document.getElementById('checkout-processing');
-            const success = document.getElementById('checkout-success');
-            
             modal.classList.add('visible');
-            processing.classList.remove('hidden');
-            success.classList.add('hidden');
+            document.getElementById('checkout-processing').classList.remove('hidden');
+            document.getElementById('checkout-success').classList.add('hidden');
 
             setTimeout(() => {
-                processing.classList.add('hidden');
-                success.classList.remove('hidden');
+                document.getElementById('checkout-processing').classList.add('hidden');
+                document.getElementById('checkout-success').classList.remove('hidden');
                 document.getElementById('checkout-count').innerText = cart.length;
                 lucide.createIcons();
-            }, 3000);
+            }, 2500);
         }
 
         function cerrarModalCheckout() {
-            const modal = document.getElementById('checkout-modal');
-            modal.classList.remove('visible');
-            
+            document.getElementById('checkout-modal').classList.remove('visible');
             if(!document.getElementById('checkout-success').classList.contains('hidden')) {
-                 cart = [];
-                 updateCartUI();
-                 renderProducts();
+                 cart = []; updateCartUI(); renderProducts();
             }
         }
 
@@ -938,6 +803,7 @@
             btn.innerHTML = `<i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 1.25rem; height: 1.25rem;"></i> Generando Recordatorio...`;
             lucide.createIcons();
 
+            // Preparar items para imprimir
             const receiptItems = document.getElementById('receipt-items');
             receiptItems.innerHTML = cart.map(item => `
                 <div class="pdf-item">
@@ -951,61 +817,47 @@
             const mainApp = document.getElementById('main-app');
             const receiptView = document.getElementById('receipt-view');
             
-            // Ocultar main app forzando reflow mínimo
+            // EL SECRETO: Hacemos que el recibo tome posesión total de la vista temporalmente.
             mainApp.style.display = 'none';
-            
-            // Preparar contenedor PDF
             receiptView.classList.add('active');
             
-            // Forzar scroll al inicio para evitar que html2canvas capture desde un offset
+            // Subimos al tope exacto para que el lienzo lo capture perfecto
             window.scrollTo(0, 0);
 
-            // Aumentar el tiempo de espera para asegurar que el DOM se repinta completamente
-            // y que las fuentes (si las hay) terminan de cargar visualmente.
+            // Timeout para asegurar que el navegador redibujó el DOM antes del screenshot
             setTimeout(() => {
                 const opt = {
-                    margin:       [10, 0, 10, 0], // Margen arriba, derecha, abajo, izquierda (en mm)
+                    margin:       [20, 20, 20, 20], // Márgenes más amplios y parejos en mm (Arriba, der, abajo, izq)
                     filename:     'Outfit_del_Alma.pdf',
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
-                        scale: 2, // Mayor escala = mejor calidad pero archivo más grande
+                        scale: 2, // Buena resolución
                         useCORS: true, 
-                        scrollY: 0, // CRUCIAL: Forzar captura desde arriba
-                        scrollX: 0,
-                        windowWidth: 800, // Ancho fijo coincidente con CSS
-                        letterRendering: true,
-                        allowTaint: true
+                        scrollY: 0,
+                        scrollX: 0, // CRUCIAL: Fuerza a iniciar la captura exactamente en el borde izquierdo
+                        windowWidth: 800 // Ancho virtual para asegurar que el contenedor de 700px quepa holgado
                     },
                     jsPDF:        { 
                         unit: 'mm', 
                         format: 'a4', 
-                        orientation: 'portrait',
-                        compress: true
+                        orientation: 'portrait' 
                     },
-                    pagebreak:    { 
-                        mode: ['avoid-all', 'css', 'legacy'],
-                        before: '.page-break-before' // Opción por si necesitas forzar saltos después
-                    }
+                    pagebreak:    { mode: 'avoid-all' } // Regla mágica para no dividir divs internos
                 };
 
                 html2pdf().set(opt).from(receiptView).save().then(() => {
-                    // Restaurar UI
+                    // Restauración tras imprimir
                     btn.innerHTML = originalText;
                     receiptView.classList.remove('active');
                     mainApp.style.display = 'block';
-                    
                     cerrarModalCheckout();
-                    cart = [];
-                    updateCartUI();
-                    renderProducts();
                 }).catch(err => {
                     console.error("Error al generar PDF:", err);
-                    // Restaurar UI en caso de error
                     btn.innerHTML = originalText;
                     receiptView.classList.remove('active');
                     mainApp.style.display = 'block';
                 });
-            }, 500); // 500ms da tiempo suficiente para que el navegador procese el cambio de display:none a block
+            }, 800); // 800ms de espera forzada garantizan que la pantalla en blanco no ocurra
         }
     </script>
 </body>
